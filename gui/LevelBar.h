@@ -26,4 +26,5 @@ private:
 			float				fValue, fRed, fGreen, fBlue, fAlpha;
 			rgb_color			fMinColor, fMidColor, fMaxColor;
 			float				fMin, fMid, fMax;
+			bool				fCustomColors;
 };

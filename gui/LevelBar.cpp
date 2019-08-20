@@ -3,7 +3,8 @@
 
 HWLevelBar::HWLevelBar ()
 	:
-	Gtk::DrawingArea()
+	Gtk::DrawingArea(),
+	fCustomColors(false)
 {
 	fMinColor = (rgb_color){26, 102, 255, 179};
 	set_min_color(fMinColor);
@@ -22,12 +23,17 @@ HWLevelBar::set_value(float value)
 {
 	fValue = value;
 
+	if (!fCustomColors)
+		return;
+
 	if (value < fMid)
 		set_bar_color(fMinColor);
 	else if (value < fMax)
 		set_bar_color(fMidColor);
 	else
 		set_bar_color(fMaxColor);
+
+	fCustomColors = true;
 }
 
 
@@ -38,6 +44,7 @@ HWLevelBar::set_bar_color(float r, float g, float b, float a)
 	fGreen = g;
 	fBlue = b;
 	fAlpha = a;
+	fCustomColors = false;
 	queue_draw();
 }
 
@@ -51,6 +58,7 @@ HWLevelBar::set_bar_color(const rgb_color& color)
 void
 HWLevelBar::set_min_color(const rgb_color& color, float min)
 {
+	fCustomColors = true;
 	fMinColor = color;
 	fMin = min;
 
@@ -62,6 +70,7 @@ HWLevelBar::set_min_color(const rgb_color& color, float min)
 void
 HWLevelBar::set_mid_color(const rgb_color& color, float mid)
 {
+	fCustomColors = true;
 	fMidColor = color;
 	fMid = mid;
 	if (fValue > mid && fValue < fMax)
@@ -72,6 +81,7 @@ HWLevelBar::set_mid_color(const rgb_color& color, float mid)
 void
 HWLevelBar::set_max_color(const rgb_color& color, float max)
 {
+	fCustomColors = true;
 	fMaxColor = color;
 	fMax = max;
 

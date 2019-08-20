@@ -5,7 +5,7 @@
 
 class HWSeparator : public Gtk::Separator {
 public:
-								HWSeparator		();
+								HWSeparator		(int hreq = 2);
 	virtual						~HWSeparator	();
 
 	virtual bool				on_draw(const ::Cairo::RefPtr<

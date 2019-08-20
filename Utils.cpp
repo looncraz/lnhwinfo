@@ -16,6 +16,22 @@
 
 namespace HWUtils {
 
+
+rgb_color mix_color(rgb_color color1, rgb_color color2, uint8 amount)
+{
+	color1.red = (uint8)(((int16(color2.red) - int16(color1.red)) * amount)
+		/ 255 + color1.red);
+	color1.green = (uint8)(((int16(color2.green) - int16(color1.green))
+		* amount) / 255 + color1.green);
+	color1.blue = (uint8)(((int16(color2.blue) - int16(color1.blue)) * amount)
+		/ 255 + color1.blue );
+	color1.alpha = (uint8)(((int16(color2.alpha) - int16(color1.alpha))
+		* amount) / 255 + color1.alpha );
+
+	return color1;
+}
+
+
 std::string		gRootPassword;
 
 void Run(int argc, char** argv)
@@ -136,6 +152,51 @@ std::string StripTrailingWhitespace(const std::string& str)
 	}
 	return result;
 }
+
+std::string StripTailUntilNumber(const std::string& str)
+{
+	std::string result = str;
+
+	for (int i = result.size() - 1; i > 0; --i) {
+		if (!std::isdigit(result[i])) {
+			result.pop_back();
+		} else {
+			break;
+		}
+	}
+	return result;
+}
+
+
+std::string StripLeadingWhitespace(const std::string& str)
+{
+	std::string result = str;
+
+	int i = 0;
+	for (; i < result.size(); ++i) {
+		if (result[i] == ' ' || result[i] == '\n' || result[i] == '\t')
+			break;
+	}
+
+	result = result.substr(i, result.size() - i);
+	return result;
+}
+
+
+std::string StripLeadUntilNumber(const std::string& str)
+{
+	std::string result = str;
+
+	int i = 0;
+	for (; i < result.size(); ++i) {
+		if (std::isdigit(result[i]))
+			break;
+	}
+
+	result = result.substr(i, result.size() - i);
+	return result;
+}
+
 
 /*
 std::vector<std::string>	SplitString	(const std::string& string, const std::string& delim,

@@ -24,29 +24,40 @@ HWSensorList::HWSensorList	()
 {
 	gSensors = this;
 
-	AddHandler("amdgpu", "edge", 		new HWGenericSensorHandler("Edge Temp"));
-	AddHandler("amdgpu", "junction", 	new HWGenericSensorHandler("Hot Spot"));
-	AddHandler("amdgpu", "mem", 		new HWGenericSensorHandler("HBM"));
-	AddHandler("amdgpu", "power", 		new HWGenericSensorHandler("Power"));
-	AddHandler("amdgpu", "vdd", 		new HWGenericSensorHandler("Voltage"));
+	AddHandler("amdgpu", "power", 		new HWGenericSensorHandler("GPU Power"));
+	AddHandler("amdgpu", "vdd", 		new HWGenericSensorHandler("GPU Voltage"));
 
-	fBox.pack_start(*(new HWSeparator()), 0, 0, 0);
+	fBox.pack_start(*(new HWSeparator(10)), 0, 0, 0);
 
-	AddHandler("nct6798", "MASTER 1",	new HWGenericSensorHandler("Chipset"));
-	AddHandler("nct6798", "fan4",		new HWGenericSensorHandler("Pump"));
-	AddHandler("nct6798", "fan5",		new HWGenericSensorHandler("Bottom"));
-	AddHandler("nct6798", "fan6",		new HWGenericSensorHandler("Chipset"));
+	AddHandler("amdgpu", "edge",
+ 			new HWTemperatureSensorHandler("GPU", 20.0, 80.0));
 
-	fBox.pack_start(*(new HWSeparator()), 0, 0, 0);
+	AddHandler("amdgpu", "junction",
+ 			new HWTemperatureSensorHandler("GPU Junction", 20.0, 110.0));
 
-	AddHandler("corsair", "Temperature 0",	new HWGenericSensorHandler("Coolant"));
-	AddHandler("corsair", "Temperature 1",	new HWGenericSensorHandler("Rad In"));
-	AddHandler("corsair", "Temperature 3",	new HWGenericSensorHandler("Power Supply"));
+	AddHandler("amdgpu", "mem",
+ 			new HWTemperatureSensorHandler("GPU HBM", 20.0, 80.0));
+
+	fBox.pack_start(*(new HWSeparator(10)), 0, 0, 0);
+
+	AddHandler("nct6798", "MASTER 1",
+			new HWTemperatureSensorHandler("Chipset", 50.0, 80.0));
+	AddHandler("corsair", "Temperature 0",
+			new HWTemperatureSensorHandler("Coolant", 30.0, 42.0));
+	AddHandler("corsair", "Temperature 1",
+			new HWTemperatureSensorHandler("Rad In", 30.0, 35.0));
+	AddHandler("corsair", "Temperature 3",
+			new HWTemperatureSensorHandler("Power Supply", 40.0, 80.0));
+
+	fBox.pack_start(*(new HWSeparator(10)), 0, 0, 0);
 
 	AddHandler("corsair", "Fan 0",	new HWGenericSensorHandler("Rad Rear"));
 	AddHandler("corsair", "Fan 1",	new HWGenericSensorHandler("Rad Mid"));
 	AddHandler("corsair", "Fan 2",	new HWGenericSensorHandler("Rad Front"));
 	AddHandler("corsair", "Fan 3",	new HWGenericSensorHandler("Front"));
+	AddHandler("nct6798", "fan6",	new HWGenericSensorHandler("Chipset"));
+	AddHandler("nct6798", "fan4",	new HWGenericSensorHandler("Pump"));
+	AddHandler("nct6798", "fan5",	new HWGenericSensorHandler("Bottom"));
 	AddHandler("corsair", "Fan 5",	new HWGenericSensorHandler("Power Supply"));
 
 }

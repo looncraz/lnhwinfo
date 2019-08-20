@@ -1,6 +1,8 @@
 #pragma once
 
 #include <gtkmm.h>
+#include "LevelBar.h"
+#include "Separator.h"
 
 /*
 	Required for generating and managing widgets to provide an GUI for
@@ -44,4 +46,28 @@ private:
  								fData;
 
 			std::string			fNameOverride;
+};
+
+
+class HWTemperatureSensorHandler : public HWSensorHandler {
+public:
+								HWTemperatureSensorHandler	();
+								HWTemperatureSensorHandler	(const std::string&,
+									float min = 0.0f, float max = 115.0f);
+	virtual						~HWTemperatureSensorHandler	();
+
+	virtual	Gtk::Box&			CreateGUI();
+	virtual void 				Updated(const std::string&);
+private:
+
+			Gtk::Box			fOuterBox, fBox;
+			Gtk::Label			fName,
+ 								fData,
+								fUnit;
+
+			HWLevelBar			fLevel;
+			HWSeparator			fSep;
+
+			std::string			fNameOverride;
+			float				fMinTemp, fMaxTemp;
 };

@@ -29,6 +29,9 @@ HWSensorList::HWSensorList	()
 
 	fBox.pack_start(*(new HWSeparator(10)), 0, 0, 0);
 
+	AddHandler("k10temp", "die",
+ 			new HWTemperatureSensorHandler("Ryzen", 20.0, 95.0));
+
 	AddHandler("amdgpu", "edge",
  			new HWTemperatureSensorHandler("GPU", 20.0, 80.0));
 

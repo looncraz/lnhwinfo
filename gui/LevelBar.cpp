@@ -3,13 +3,13 @@
 
 HWLevelBar::HWLevelBar ()
 	:
-	Gtk::DrawingArea(),
- 	fValue(0.0f),
-	fRed(0.1),
- 	fGreen(0.4),
-	fBlue(1.0),
-	fAlpha(0.7)
+	Gtk::DrawingArea()
 {
+	fMinColor = (rgb_color){26, 102, 255, 179};
+	set_min_color(fMinColor);
+	set_mid_color(fMinColor);
+	set_max_color(fMinColor);
+	set_value(0.0f);
 }
 
 HWLevelBar::~HWLevelBar	()
@@ -21,7 +21,13 @@ void
 HWLevelBar::set_value(float value)
 {
 	fValue = value;
-	queue_draw();
+
+	if (value < fMid)
+		set_bar_color(fMinColor);
+	else if (value < fMax)
+		set_bar_color(fMidColor);
+	else
+		set_bar_color(fMaxColor);
 }
 
 
@@ -33,6 +39,44 @@ HWLevelBar::set_bar_color(float r, float g, float b, float a)
 	fBlue = b;
 	fAlpha = a;
 	queue_draw();
+}
+
+void
+HWLevelBar::set_bar_color(const rgb_color& color)
+{
+	set_bar_color(color.rf(), color.gf(), color.bf(), color.af());
+}
+
+
+void
+HWLevelBar::set_min_color(const rgb_color& color, float min)
+{
+	fMinColor = color;
+	fMin = min;
+
+	if (fValue < fMid)
+		queue_draw();
+}
+
+
+void
+HWLevelBar::set_mid_color(const rgb_color& color, float mid)
+{
+	fMidColor = color;
+	fMid = mid;
+	if (fValue > mid && fValue < fMax)
+		queue_draw();
+}
+
+
+void
+HWLevelBar::set_max_color(const rgb_color& color, float max)
+{
+	fMaxColor = color;
+	fMax = max;
+
+	if (fValue > max)
+		queue_draw();
 }
 
 

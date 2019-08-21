@@ -18,6 +18,8 @@ private:
 	virtual void 				on_size_allocate(Gtk::Allocation&)	override;
 	virtual void 				on_realize() override;
 
+	virtual	bool				on_button_click(GdkEventButton*);
+
 			SizeConstrainedBox	fBox;
 			HWClockWidget		fClock;
 			HWCPUStatusBox		fCPUStatus;

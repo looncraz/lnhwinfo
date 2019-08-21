@@ -5,6 +5,8 @@
 #include "Utils.h"
 #include "Separator.h"
 
+
+
 HWMainWindow::HWMainWindow	()
 	:
 	Gtk::Window(Gtk::WindowType::WINDOW_TOPLEVEL),
@@ -25,6 +27,11 @@ HWMainWindow::HWMainWindow	()
 	fBox.pack_start(*(new HWSeparator()), false, false, 0);
 	fBox.show_all();
 	add(fBox);
+
+	add_events(Gdk::BUTTON_PRESS_MASK);
+	signal_button_press_event().connect(
+		sigc::mem_fun(this, &HWMainWindow::on_button_click)
+	);
 }
 
 
@@ -54,4 +61,14 @@ HWMainWindow::on_realize()
 {
 	Gtk::Window::on_realize();
 	HWUtils::ReserveScreenSpace(this);
+}
+
+
+bool
+HWMainWindow::on_button_click(GdkEventButton* ev)
+{
+	if (ev->type == GDK_2BUTTON_PRESS) {
+		HWUtils::ShellExec("mate-system-monitor &");
+	}
+	return true;
 }

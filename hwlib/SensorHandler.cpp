@@ -24,8 +24,8 @@ HWGenericSensorHandler::HWGenericSensorHandler	()
 {
 }
 
-HWGenericSensorHandler::HWGenericSensorHandler	(const std::string& over,
-	std::function<void(std::string&)>	func)
+HWGenericSensorHandler::HWGenericSensorHandler	(CString& over,
+	std::function<void(SString&)>	func)
 	:
 	fBox(Gtk::ORIENTATION_HORIZONTAL),
 	fName(over),
@@ -53,7 +53,7 @@ HWGenericSensorHandler::CreateGUI()
 }
 
 void
-HWGenericSensorHandler::Updated(const std::string& line)
+HWGenericSensorHandler::Updated(CString& line)
 {
 	auto split = HWUtils::SplitString(line, ":");
 
@@ -66,10 +66,10 @@ HWGenericSensorHandler::Updated(const std::string& line)
 		fName.set_label(HWUtils::StripTrailingWhitespace(split[0].c_str()));
 
 	split = HWUtils::SplitString(split[1], "(");
-	std::string str = split[0];
+	SString str = split[0];
 	fFunc(str);
 
-	std::string data = "<span size=\"small\">"
+	SString data = "<span size=\"small\">"
  		+ HWUtils::StripTrailingWhitespace(str) + "</span>";
 	fData.set_label(data);
 }
@@ -83,7 +83,7 @@ HWGenericSensorHandler::Updated(const HWSensor& sensor)
 
 	for (auto [key, value] : sensor.values) {
 		if (fNameOverride.size() == 0
-				&& key.find("_name") != std::string::npos) {
+				&& key.find("_name") != SString::npos) {
 			fNameOverride = value;
 			fName.set_label(value);
 			continue;
@@ -91,16 +91,16 @@ HWGenericSensorHandler::Updated(const HWSensor& sensor)
 
 		auto iter = key.find("_input");
 
-		if (iter != std::string::npos)
+		if (iter != SString::npos)
 			hasInput = true;
 		else
 			iter = key.find("_average");
 
-		if (iter != std::string::npos) {
+		if (iter != SString::npos) {
 			// TODO: need some ability to manipulate value
 			fFunc(value);
 
-			std::string data = "<span size=\"small\">" + value + "</span>";
+			SString data = "<span size=\"small\">" + value + "</span>";
 			fData.set_label(data);
 		}
 	}
@@ -122,7 +122,7 @@ HWTemperatureSensorHandler::HWTemperatureSensorHandler	()
 }
 
 
-HWTemperatureSensorHandler::HWTemperatureSensorHandler	(const std::string& over,
+HWTemperatureSensorHandler::HWTemperatureSensorHandler	(CString& over,
 		float min, float max)
 	:
 	fOuterBox(Gtk::ORIENTATION_VERTICAL),
@@ -172,7 +172,7 @@ HWTemperatureSensorHandler::CreateGUI()
 
 
 void
-HWTemperatureSensorHandler::Updated(const std::string& line)
+HWTemperatureSensorHandler::Updated(CString& line)
 {
 	auto split = HWUtils::SplitString(line, ":");
 
@@ -196,7 +196,7 @@ HWTemperatureSensorHandler::Updated(const std::string& line)
 	val = (val - fMinTemp) / (fMaxTemp - fMinTemp);
 	fLevel.set_value(val);
 
-	std::string data = "<span size=\"small\">" + str + "</span>";
+	SString data = "<span size=\"small\">" + str + "</span>";
 	fData.set_label(data);
 }
 
@@ -209,7 +209,7 @@ HWTemperatureSensorHandler::Updated(const HWSensor& sensor)
 	// look for _input and _label
 	for (auto [key, value] : sensor.values) {
 		if (fNameOverride.size() == 0
-				&& key.find("_name") != std::string::npos) {
+				&& key.find("_name") != SString::npos) {
 			fNameOverride = value;
 			fName.set_label(value);
 			continue;
@@ -217,24 +217,24 @@ HWTemperatureSensorHandler::Updated(const HWSensor& sensor)
 
 		auto iter = key.find("_input");
 
-		if (iter != std::string::npos)
+		if (iter != SString::npos)
 			hasInput = true;
 		else
 			iter = key.find("_average");
 
-		if (iter != std::string::npos) {
+		if (iter != SString::npos) {
 			// TODO: need some ability to manipulate value
 			float val = atoi(value.c_str());
 			val /= 1000.0;
 			value = std::to_string(val);
 			auto start = value.find(".");
-			if (start == std::string::npos) {
+			if (start == SString::npos) {
 				value += ".0";
 			} else {
 				value.resize(start + 2);
 			}
 
-			std::string data = "<span size=\"small\">" +  value + "</span>";
+			SString data = "<span size=\"small\">" +  value + "</span>";
 			fData.set_label(data);
 
 			val = (val - fMinTemp) / (fMaxTemp - fMinTemp);
@@ -257,7 +257,7 @@ HWUsageSensorHandler::HWUsageSensorHandler	()
 }
 
 
-HWUsageSensorHandler::HWUsageSensorHandler	(const std::string& over)
+HWUsageSensorHandler::HWUsageSensorHandler	(CString& over)
 	:
 	fOuterBox(Gtk::ORIENTATION_VERTICAL),
 	fBox(Gtk::ORIENTATION_HORIZONTAL),
@@ -303,7 +303,7 @@ HWUsageSensorHandler::CreateGUI()
 
 
 void
-HWUsageSensorHandler::Updated(const std::string& line)
+HWUsageSensorHandler::Updated(CString& line)
 {
 	auto split = HWUtils::SplitString(line, ":");
 
@@ -324,7 +324,7 @@ HWUsageSensorHandler::Updated(const std::string& line)
 //	printf("Usage str: \"%s\"\n", str.c_str());
 
 //	str = "0";
-	std::string data = "<span size=\"small\">" + str  + "</span>";
+	SString data = "<span size=\"small\">" + str  + "</span>";
 	fData.set_label(data);
 }
 
@@ -337,7 +337,7 @@ HWUsageSensorHandler::Updated(const HWSensor& sensor)
 	// look for _input and _label
 	for (auto [key, value] : sensor.values) {
 		if (fNameOverride.size() == 0
-				&& key.find("_name") != std::string::npos) {
+				&& key.find("_name") != SString::npos) {
 			fNameOverride = value;
 			fName.set_label(value);
 			continue;
@@ -345,17 +345,17 @@ HWUsageSensorHandler::Updated(const HWSensor& sensor)
 
 		auto iter = key.find("_input");
 
-		if (iter != std::string::npos)
+		if (iter != SString::npos)
 			hasInput = true;
 		else
 			iter = key.find("_average");
 
-		if (iter != std::string::npos) {
+		if (iter != SString::npos) {
 			// TODO: need some ability to manipulate value
 			float val = atoi(value.c_str());
 			val /= 1000.0;
 
-			std::string data = "<span size=\"small\">" +  value + "</span>";
+			SString data = "<span size=\"small\">" +  value + "</span>";
 			fData.set_label(data);
 
 			fLevel.set_value(val);

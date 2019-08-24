@@ -178,11 +178,11 @@ HWCPUMonitor::_SetSched(HWCPUCore& core, HWScheduler sched)
 	core.scheduler = sched;
 
 	for (auto& thd : core.threads) {
-		std::string cmd = "cpufreq-set -c ";
+		SString cmd = "cpufreq-set -c ";
 		cmd += std::to_string(thd);
 		cmd += " -g ";
 
-		std::string mode;
+		SString mode;
 
 		switch (sched) {
 			case HWSCHED_POWERSAVE  : mode = "powersave";   break;

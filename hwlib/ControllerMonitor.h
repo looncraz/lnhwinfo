@@ -5,36 +5,35 @@
 
 
 struct HWSensor {
-	std::map<std::string, std::string>	values;		// "input" : "408"
+	std::map<SString, SString>	values;		// "input" : "408"
 };
 
-using HWSensorMap = std::map<std::string, HWSensor>;
+using HWSensorMap = std::map<SString, HWSensor>;
 
 
 class HWController {
 
 public:
 								HWController	();
-								HWController	(const std::string& path);
+								HWController	(CString& path);
 								~HWController	();
 
-	const	std::string&		Name		() const;
+	const	SString&		Name		() const;
 	const	HWSensorMap&		Sensors		() const;
 
 		// Refresh calls are ignored if not enough time has passed...
 		// so frequent calls are expected.cd
 			void				RefreshAll	();
-			void				Refresh		(const std::string& byName);
-			void				Refresh		(const std::string& byName,
-												const std::string& oneValue);
+			void				Refresh		(CString& byName);
+			void				Refresh		(CString& name, CString& value);
 
 			void				SetMaxUpdateInterval(time_ms_t);
 			time_ms_t			MaxUpdateInterval	() const;
 private:
 			bool				_CanRefresh() const;
 			void				_Refreshed();
-			std::string			fPath;
-			std::string			fName;
+			SString				fPath;
+			SString				fName;
 			HWSensorMap			fSensors;
 			time_ms_t			fMaxUpdateInterval;
 			time_point_t		fLastUpdateTime;
@@ -46,22 +45,20 @@ public:
 	explicit					HWControllerMonitor	();
 								~HWControllerMonitor	();
 
-	const std::map<std::string, HWController>&
-								Controllers() const;
+	const SStringMap<HWController>& Controllers() const;
 
 			void				RefreshAll();
 
 			void				ForEachValue(
 				std::function<void(
-						const std::string&, // controller (eg: amdgpu)
-						const std::string&,	// sensor (eg: in0)
-						const std::string&, // key (eg: in0_input)
-						const std::string&  // value (eg: 464)
+						CString&, // controller (eg: amdgpu)
+						CString&,	// sensor (eg: in0)
+						CString&, // key (eg: in0_input)
+						CString&  // value (eg: 464)
 					)> ) const;
 
 private:
-		std::map<std::string, HWController>
-								fControllers;
+	SStringMap<HWController>	fControllers;
 };
 
 

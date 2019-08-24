@@ -58,17 +58,17 @@ void
 HWCPUWidget::_Refresh(const HWCPUCore& core)
 {
 	auto freq = core.frequency.back();
-	std::string label;
+	SString label;
 
 	if (freq > 1000) {
-		std::string str = std::to_string(freq / 1000.0);
+		SString str = std::to_string(freq / 1000.0);
 		str.resize(4);
 		label += str;
 	} else {
 		label += "<span color=\"#cacaca\">";
 		if (freq < 1 && freq > 0.25)
 			freq = 1;
-		std::string str = std::to_string((int)freq);
+		SString str = std::to_string((int)freq);
 		label += str;
 	}
 

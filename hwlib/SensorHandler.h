@@ -28,7 +28,7 @@ public:
 
 		edge:         +33.0°C  (crit = +100.0°C, hyst = -273.1°C)
 	*/
-	virtual void 				Updated(const std::string&) = 0;
+	virtual void 				Updated(CString&) = 0;
 	virtual	void				Updated(const HWSensor&) = 0;
 };
 
@@ -36,13 +36,13 @@ public:
 class HWGenericSensorHandler : public HWSensorHandler {
 public:
 								HWGenericSensorHandler	();
-								HWGenericSensorHandler	(const std::string&,
-									std::function<void(std::string&)>
-										= [](std::string&){});
+								HWGenericSensorHandler	(CString&,
+									std::function<void(SString&)>
+										= [](SString&){});
 	virtual						~HWGenericSensorHandler	();
 
 	virtual	Gtk::Box&			CreateGUI();
-	virtual void 				Updated(const std::string&);
+	virtual void 				Updated(CString&);
 	virtual	void				Updated(const HWSensor&);
 private:
 
@@ -50,20 +50,20 @@ private:
 			Gtk::Label			fName,
  								fData;
 
-			std::string			fNameOverride;
-			std::function<void(std::string&)>	fFunc;
+			SString			fNameOverride;
+			std::function<void(SString&)>	fFunc;
 };
 
 
 class HWTemperatureSensorHandler : public HWSensorHandler {
 public:
 								HWTemperatureSensorHandler	();
-								HWTemperatureSensorHandler	(const std::string&,
+								HWTemperatureSensorHandler	(CString&,
 									float min = 0.0f, float max = 115.0f);
 	virtual						~HWTemperatureSensorHandler	();
 
 	virtual	Gtk::Box&			CreateGUI();
-	virtual void 				Updated(const std::string&);
+	virtual void 				Updated(CString&);
 	virtual	void				Updated(const HWSensor&);
 private:
 
@@ -75,7 +75,7 @@ private:
 			HWLevelBar			fLevel;
 			HWSeparator			fSep;
 
-			std::string			fNameOverride;
+			SString			fNameOverride;
 			float				fMinTemp, fMaxTemp;
 };
 
@@ -83,11 +83,11 @@ private:
 class HWUsageSensorHandler : public HWSensorHandler {
 public:
 								HWUsageSensorHandler	();
-								HWUsageSensorHandler	(const std::string&);
+								HWUsageSensorHandler	(CString&);
 	virtual						~HWUsageSensorHandler	();
 
 	virtual	Gtk::Box&			CreateGUI();
-	virtual void 				Updated(const std::string&);
+	virtual void 				Updated(CString&);
 	virtual	void				Updated(const HWSensor&);
 private:
 
@@ -99,5 +99,5 @@ private:
 			HWLevelBar			fLevel;
 			HWSeparator			fSep;
 
-			std::string			fNameOverride;
+			SString			fNameOverride;
 };

@@ -10,9 +10,9 @@ class HWPathMonitorItem {
 	friend class HWPathMonitor;
 	friend class HWSensorList;
 
-	std::string					name;
-	std::string					path;
-	std::string					value;
+	SString					name;
+	SString					path;
+	SString					value;
 
 	time_ms_t					interval;
 	time_point_t				lastRefresh;
@@ -29,23 +29,22 @@ public:
 	explicit					HWPathMonitor	();
 								~HWPathMonitor	();
 
-			void				Add(const std::string& name,
-									const std::string& path,	// to a file!
+			void				Add(CString& name, CString& path, // sysfs
 									uint32 milliseconds,
 									std::function<void(HWPathMonitorItem&)>
 									=[](HWPathMonitorItem&){});
 
-			void				Remove	(const std::string& name);
+			void				Remove	(CString& name);
 
-	const	HWPathMonitor*		Get		(const std::string& name) const;
-			HWPathMonitor*		Get		(const std::string& name);
+	const	HWPathMonitor*		Get		(CString& name) const;
+			HWPathMonitor*		Get		(CString& name);
 
 			void				Begin	();
 			void				Refresh	();
 private:
 
 
-	std::map<std::string, HWPathMonitorItem> fItems;
+	std::map<SString, HWPathMonitorItem> fItems;
 			uint32				fShortestInterval;
 };
 

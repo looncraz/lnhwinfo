@@ -18,7 +18,12 @@ using time_point_t = std::chrono::time_point<std::chrono::system_clock>;
 #	define int16 short
 #	define uint8 uint8_t
 
-typedef std::deque<std::string> HWStringList;
+typedef const std::string 	CString;
+typedef std::string 		SString;
+typedef std::deque<SString> SStringList;
+
+template<typename T>
+class SStringMap : public std::map<SString, T>{};
 
 typedef struct rgb_color {
 	uint8		red;

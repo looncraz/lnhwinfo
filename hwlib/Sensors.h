@@ -22,32 +22,32 @@ public:
 			Gtk::Box&			GetBox			();
 
 			// only one handler per sensor!
-			bool				AddHandler	(	const std::string& controller,
-												const std::string& sensor,
+			bool				AddHandler	(	CString& controller,
+												CString& sensor,
 												HWSensorHandler* );
 
-			bool				AddPathHandler	(const std::string& name,
-												const std::string& path,
+			bool				AddPathHandler	(CString& name,
+												CString& path,
 												uint32 milliseconds,
 												HWSensorHandler*,
 									std::function<void(HWPathMonitorItem&)>
 									= [](HWPathMonitorItem&){});
 
 			// use a specific path
-			bool				AddHandler	(	const std::string& path,
+			bool				AddHandler	(	CString& path,
 												HWSensorHandler* );
 
 			void				PathRefreshed	(const HWPathMonitorItem&);
 
 private:
-	std::map<std::string,		// controller
-		std::map<std::string,	// sensor
+	std::map<SString,		// controller
+		std::map<SString,	// sensor
 			HWSensorHandler*>>	fHandlers;
 
 			void 				_RefreshCorsair();
 
-			void 				_Invoke(const std::string& controller,
-									const std::string& sensor);
+			void 				_Invoke(CString& controller,
+									CString& sensor);
 
 			Gtk::Box			fBox;
 };

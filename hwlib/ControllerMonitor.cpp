@@ -12,12 +12,7 @@ namespace fs = std::experimental::filesystem;
 #endif
 
 
-/*
-struct HWSensor {
-	std::string							name;		// eg "in0"
-	std::map<std::string, std::string>	values;		// "input" : "408"
-};
-*/
+
 HWController::HWController	()
 	:
 	fMaxUpdateInterval(std::chrono::milliseconds(50)),
@@ -26,7 +21,7 @@ HWController::HWController	()
 }
 
 
-HWController::HWController	(const std::string& path)
+HWController::HWController	(CString& path)
 	:
 	fPath(path),
 	fMaxUpdateInterval(std::chrono::milliseconds(50)),
@@ -34,7 +29,7 @@ HWController::HWController	(const std::string& path)
 {
 	//printf("%s\n", path.c_str());
 
-	std::string name;
+	SString name;
 
 	for (auto& p : fs::directory_iterator(path)) {
 		name = p.path().string().substr(path.size() + 1,
@@ -48,15 +43,15 @@ HWController::HWController	(const std::string& path)
 		}
 
 		auto end = name.find("_");
-		if (end == std::string::npos)
+		if (end == SString::npos)
 			continue;
 
 
-		std::string subName = name.substr(0, end);
+		SString subName = name.substr(0, end);
 		//printf("\t%s\n", subName.c_str());
 
 		auto& sensor = fSensors[subName];
-		std::string value;
+		SString value;
 		HWUtils::ReadFileAsString(p.path().string(), &value);
 
 		sensor.values[name] = value;
@@ -79,7 +74,7 @@ HWController::~HWController	()
 }
 
 
-const std::string&
+CString&
 HWController::Name () const
 {
 	return fName;
@@ -109,7 +104,7 @@ HWController::RefreshAll()
 
 
 void
-HWController::Refresh(const std::string& byName)
+HWController::Refresh(CString& byName)
 {
 	if (!_CanRefresh())
 		return;
@@ -119,7 +114,7 @@ HWController::Refresh(const std::string& byName)
 
 
 void
-HWController::Refresh(const std::string& byName, const std::string& oneValue)
+HWController::Refresh(CString& byName, CString& oneValue)
 {
 	if (!_CanRefresh())
 		return;
@@ -166,8 +161,8 @@ HWControllerMonitor::HWControllerMonitor	()
 {
 	try {
 	for (auto& dir : fs::directory_iterator("/sys/class/hwmon")) {
-		std::string path = dir.path();
-		std::string name;
+		SString path = dir.path();
+		SString name;
 		if (HWUtils::ReadFileAsString(path + "/name", &name))
 			fControllers[name] = HWController(path);
 	}
@@ -178,8 +173,8 @@ HWControllerMonitor::HWControllerMonitor	()
 	gControllers = this;
 
 /*
-	ForEachValue([](const std::string& a, const std::string& b,
-			const std::string& c, const std::string& d){
+	ForEachValue([](CString& a, CString& b,
+			CString& c, CString& d){
 		printf("%-10s %-10s %-30s = %s\n", a.c_str(), b.c_str(), c.c_str(), d.c_str());
 	});
 */
@@ -189,7 +184,7 @@ HWControllerMonitor::~HWControllerMonitor	()
 {}
 
 
-const std::map<std::string, HWController>&
+const SStringMap<HWController>&
 HWControllerMonitor::Controllers() const
 {
 	return fControllers;
@@ -207,10 +202,10 @@ HWControllerMonitor::RefreshAll()
 void
 HWControllerMonitor::ForEachValue(
 	std::function<void(
-			const std::string&, // controller (eg: amdgpu)
-			const std::string&,	// sensor (eg: in0)
-			const std::string&, // key (eg: in0_input)
-			const std::string&  // value (eg: 464)
+			CString&, // controller (eg: amdgpu)
+			CString&,	// sensor (eg: in0)
+			CString&, // key (eg: in0_input)
+			CString&  // value (eg: 464)
 		)> func) const
 {
 	for (auto& [controllerName, controller] : Controllers()) {

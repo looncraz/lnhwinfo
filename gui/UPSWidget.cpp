@@ -40,10 +40,10 @@ HWUPSWidget::Refresh()
 	auto lines = HWUtils::SplitString(result, "\n");
 
 	for (auto& line : lines) {
-		if (line.find("Load") != std::string::npos) {
+		if (line.find("Load") != SString::npos) {
 
 			auto numbers = HWUtils::ExtractAllIntegers(line);
-			std::string label = std::to_string(numbers[0]);
+			SString label = std::to_string(numbers[0]);
 			label += " Watts";
 			fLabel.set_label(label.c_str());
 			fBar.set_value((double)numbers[1] / 100.0);

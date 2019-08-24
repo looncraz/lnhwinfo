@@ -24,14 +24,14 @@ public:
 											bool fatal = false);
 								~RError	();
 
-		const std::string&		ToString() const;
+		CString&				ToString() const;
 		const str::string&		ExtendedError() const;
 
 		bool					IsFatal() const;
 
 		RErrorType				Error() const;
 
-		void					SetExtendedError(const std::string&);
+		void					SetExtendedError(CString&);
 		void					SetFatal(bool);
 		void					SetError(RErrorType);
 
@@ -39,15 +39,13 @@ public:
 		explicit				operator bool () const;
 			// evaluates to true if we hold an error. C++11 safe-bool
 
-		/*explicit*/			operator const std::string& () const;
+		/*explicit*/			operator CString& () const;
 			// returns ToString()
 
 private:
-		std::string				fErrorString,
+		SString					fErrorString,
 								fExtendedError;
 
 		RErrorType				fErrorType;
 		bool					fFatal;
 };
-
-

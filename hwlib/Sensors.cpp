@@ -46,7 +46,7 @@ HWSensorList::HWSensorList	()
 		Video memory usage
 	*/
 	uint64 totalVRam = 0;
-	std::string buf;
+	SString buf;
 	if (HWUtils::ReadFileAsString(
 			"/sys/class/drm/card0/device/mem_info_vram_total", &buf)) {
 
@@ -63,13 +63,13 @@ HWSensorList::HWSensorList	()
 	}
 
 	AddHandler("amdgpu", "power1", 		new HWGenericSensorHandler("Power",
-		[](std::string& value) {
+		[](SString& value) {
 			value = value.substr(0, value.size() - 6);
 			value += ".0 W";
 		}));
 
 	AddHandler("amdgpu", "in0", 		new HWGenericSensorHandler("Voltage",
-		[](std::string& value) {
+		[](SString& value) {
 			if (value.size() == 3)
 				value.resize(2);
 
@@ -77,7 +77,7 @@ HWSensorList::HWSensorList	()
 		}));
 
 	AddHandler("amdgpu", "freq1", 		new HWGenericSensorHandler("Frequency",
-		[](std::string& value) {
+		[](SString& value) {
 			value = value.substr(0, value.size() - 6);
 			value += " MHz";
 		}));
@@ -127,7 +127,7 @@ HWSensorList::PathRefreshed	(const HWPathMonitorItem& item)
 	if (fHandlers.find(item.name) != fHandlers.end()) {
 		auto& pathMap = fHandlers[item.name];
 		if (pathMap.find(item.path) != pathMap.end()) {
-			std::string line = item.name + ":" + item.value;
+			SString line = item.name + ":" + item.value;
 			pathMap[item.path]->Updated(line);
 		}
 	}
@@ -166,12 +166,12 @@ HWSensorList::Refresh()
 			continue;
 
 		for (auto& [ctrl, sensorMap] : fHandlers) {
-			if (sensors[0].find(ctrl) != std::string::npos) {
+			if (sensors[0].find(ctrl) != SString::npos) {
 				// iterate through handlers, find relevant line
 				for (auto& [sens, hand] : sensorMap) {
 
 					for (auto& line : sensors) {
-						if (line.find(sens) != std::string::npos) {
+						if (line.find(sens) != SString::npos) {
 							hand->Updated(line);
 							break;
 						}
@@ -194,9 +194,9 @@ HWSensorList::_RefreshCorsair()
 
 	for (auto& line : lines) {
 		for (auto& [controller, sensors] : fHandlers) {
-			if (controller.find("corsair") != std::string::npos) {
+			if (controller.find("corsair") != SString::npos) {
 				for (auto& [sensor, handler] : sensors) {
-					if (line.find(sensor) != std::string::npos) {
+					if (line.find(sensor) != SString::npos) {
 						handler->Updated(line);
 					}
 				}
@@ -216,7 +216,7 @@ HWSensorList::GetBox()
 
 
 bool
-HWSensorList::AddHandler(const std::string& controller, const std::string& sensor,
+HWSensorList::AddHandler(CString& controller, CString& sensor,
 	HWSensorHandler* handler )
 {
 	if (!handler || controller.size() == 0 || sensor.size() == 0) {
@@ -251,9 +251,8 @@ HWSensorList::AddHandler(const std::string& controller, const std::string& senso
 }
 
 bool
-HWSensorList::AddPathHandler(const std::string& name, const std::string& path,
-		uint32 interval, HWSensorHandler* handler,
- 		std::function<void(HWPathMonitorItem&)> func)
+HWSensorList::AddPathHandler(CString& name, CString& path, uint32 interval,
+ 	HWSensorHandler* handler, std::function<void(HWPathMonitorItem&)> func)
 {
 	if (!AddHandler(name, path, handler))
 		return false;

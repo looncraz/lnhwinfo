@@ -5,6 +5,7 @@
 #include <map>
 
 #include "HWTypes.h"
+#include "Globals.h"
 
 
 enum HWScheduler {
@@ -48,7 +49,7 @@ private:
 
 	std::map<int, std::vector<std::function<void(const HWCPUCore&)>>>
 								fListeners;
-	std::vector<std::string>	fFirst, fSecond;
+	std::vector<SString>		fFirst, fSecond;
 			bool				fOnSecond;
 
 	std::map<int, HWCPUCore>	fCores;

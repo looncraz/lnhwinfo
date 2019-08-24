@@ -14,36 +14,36 @@ namespace HWUtils {
 	rgb_color mix_color(rgb_color color1, rgb_color color2, uint8 amount);
 
 	// for detecting "--rootpw=password"
-	bool						Run(int argc, char** argv);
+	bool					Run(int argc, char** argv);
 
-	std::deque<uint64> 			ExtractAllIntegers		(std::string);
-	int 						ExtractTrailingInteger	(std::string);
-	float						ExtractTrailingFloat	(std::string);
+	std::deque<uint64>		ExtractAllIntegers		(SString);
+	int 					ExtractTrailingInteger	(SString);
+	float					ExtractTrailingFloat	(SString);
 
-	bool						ReadFileAsInt(std::string path, int32* out);
-	bool 						ReadFileAsString(std::string path,
- 									std::string* out);
+	bool					ReadFileAsInt(SString path, int32* out);
+	bool 					ReadFileAsString(SString path,
+ 								SString* out);
 
 
-	std::string					ShellExec	(const std::string& command);
-	std::string					ShellRootExec(const std::string& command);
+	SString					ShellExec	(CString& command);
+	SString					ShellRootExec(CString& command);
 
-	std::vector<std::string>	SplitString	(const std::string& string,
-									const std::string& delim, unsigned limit = UINT_MAX);
+	std::vector<SString>	SplitString	(CString& string, CString& delim,
+ 								unsigned limit = UINT_MAX);
 
-	std::string					StripTrailingWhitespace(const std::string&);
-	std::string					StripTailUntilNumber(const std::string&);
+	SString					StripTrailingWhitespace(CString&);
+	SString					StripTailUntilNumber(CString&);
 
-	std::string					StripLeadingWhitespace(const std::string&);
-	std::string					StripLeadUntilNumber(const std::string&);
+	SString					StripLeadingWhitespace(CString&);
+	SString					StripLeadUntilNumber(CString&);
 
 	/*
 		Modify X11 screen struts to prevent windows from being maximized
 		and taking over a portion of the screen (an edge).
 	*/
-	bool 						ReserveScreenSpace	(Gtk::Window* window);
+	bool 					ReserveScreenSpace	(Gtk::Window* window);
 
-	bool 						UnreserveScreenSpace (Gtk::Window* window);
+	bool 					UnreserveScreenSpace (Gtk::Window* window);
 
 
 }; // end namespace HWUtils

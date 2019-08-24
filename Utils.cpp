@@ -32,14 +32,14 @@ rgb_color mix_color(rgb_color color1, rgb_color color2, uint8 amount)
 }
 
 
-std::string		gRootPassword;
+SString		gRootPassword;
 
 bool Run(int argc, char** argv)
 {
 	for (int i = 1; i < argc; ++i) {
-		std::string str = argv[i];
+		SString str = argv[i];
 		auto start = str.find("--rootpw=");
-		if (start != std::string::npos) {
+		if (start != SString::npos) {
 			gRootPassword = str.substr(start + 9, str.size() - (start + 9));
 		} else {
 			fprintf(stderr, "Uknown option: %s\n", argv[i]);
@@ -52,9 +52,9 @@ bool Run(int argc, char** argv)
 	return gRootPassword.size() != 0;
 }
 
-std::deque<uint64> ExtractAllIntegers(std::string line) {
+std::deque<uint64> ExtractAllIntegers(SString line) {
 	std::deque<uint64> result;
-	std::string buf;
+	SString buf;
 	while (line.size() > 0) {
 		while (std::isdigit(line.back())) {
 			buf.insert(0, 1, line.back());
@@ -69,8 +69,8 @@ std::deque<uint64> ExtractAllIntegers(std::string line) {
 }
 
 
-int ExtractTrailingInteger(std::string line) {
-	std::string buf;
+int ExtractTrailingInteger(SString line) {
+	SString buf;
 	while (std::isdigit(line.back())) {
 		buf.insert(0, 1, line.back());
 		line.pop_back();
@@ -83,8 +83,8 @@ int ExtractTrailingInteger(std::string line) {
 }
 
 
-float ExtractTrailingFloat(std::string line) {
-	std::string buf;
+float ExtractTrailingFloat(SString line) {
+	SString buf;
 	while (std::isdigit(line.back()) || line.back() == '.') {
 		buf.insert(0, 1, line.back());
 		line.pop_back();
@@ -93,13 +93,13 @@ float ExtractTrailingFloat(std::string line) {
 }
 
 
-bool ReadFileAsInt(std::string path, int32* out)
+bool ReadFileAsInt(SString path, int32* out)
 {
 	if (path.size() == 0 || out == nullptr)
 		return false;
 
 	std::ifstream ifile;
-	std::string buf;
+	SString buf;
 
 	ifile.open(path);
 	if (!getline(ifile, buf)) {
@@ -116,7 +116,7 @@ bool ReadFileAsInt(std::string path, int32* out)
 
 
 
-bool ReadFileAsString(std::string path, std::string* out)
+bool ReadFileAsString(SString path, SString* out)
 {
 	if (out == nullptr)
 		return false;
@@ -134,10 +134,10 @@ bool ReadFileAsString(std::string path, std::string* out)
 
 
 
-std::string ShellExec	(const std::string& command)
+SString ShellExec	(CString& command)
 {
     std::array<char, 128> buffer;
-    std::string result;
+    SString result;
     std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(command.c_str(), "r"), pclose);
     if (!pipe) {
         throw std::runtime_error("popen() failed!");
@@ -148,30 +148,30 @@ std::string ShellExec	(const std::string& command)
     return result;
 }
 
-std::string ShellRootExec(const std::string& _command)
+SString ShellRootExec(CString& _command)
 {
 	if (gRootPassword.size() == 0)
 		fprintf(stderr, "Root password is blank!\n");
 
-	std::string command = "sh -c \"echo \"" + gRootPassword
+	SString command = "sh -c \"echo \"" + gRootPassword
 		+ "\" | sudo -S " + _command + "\"";
 
 	return ShellExec(command);
 }
 
 
-std::vector<std::string> SplitString(const std::string& s,
- 	const std::string& separator, unsigned limit)
+std::vector<SString> SplitString(CString& s,
+ 	CString& separator, unsigned limit)
 {
-   std::vector<std::string> output;
+   std::vector<SString> output;
 
-    std::string::size_type prev_pos = 0, pos = 0;
+    SString::size_type prev_pos = 0, pos = 0;
 
 	unsigned count = 0;
-	while(count < limit && (pos = s.find(separator, pos)) != std::string::npos)
+	while(count < limit && (pos = s.find(separator, pos)) != SString::npos)
     {
 		++count;
-        std::string substring( s.substr(prev_pos, pos-prev_pos) );
+        SString substring( s.substr(prev_pos, pos-prev_pos) );
 
 		if (substring.size() != 0 && substring != separator) {
 			output.push_back(substring);
@@ -188,9 +188,9 @@ std::vector<std::string> SplitString(const std::string& s,
 }
 
 
-std::string StripTrailingWhitespace(const std::string& str)
+SString StripTrailingWhitespace(CString& str)
 {
-	std::string result = str;
+	SString result = str;
 
 	for (int i = result.size() - 1; i > 0; --i) {
 		if (result[i] == ' ' || result[i] == '\n' || result[i] == '\t') {
@@ -202,9 +202,9 @@ std::string StripTrailingWhitespace(const std::string& str)
 	return result;
 }
 
-std::string StripTailUntilNumber(const std::string& str)
+SString StripTailUntilNumber(CString& str)
 {
-	std::string result = str;
+	SString result = str;
 
 	for (int i = result.size() - 1; i > 0; --i) {
 		if (!std::isdigit(result[i])) {
@@ -217,9 +217,9 @@ std::string StripTailUntilNumber(const std::string& str)
 }
 
 
-std::string StripLeadingWhitespace(const std::string& str)
+SString StripLeadingWhitespace(CString& str)
 {
-	std::string result = str;
+	SString result = str;
 
 	int i = 0;
 	for (; i < result.size(); ++i) {
@@ -232,9 +232,9 @@ std::string StripLeadingWhitespace(const std::string& str)
 }
 
 
-std::string StripLeadUntilNumber(const std::string& str)
+SString StripLeadUntilNumber(CString& str)
 {
-	std::string result = str;
+	SString result = str;
 
 	int i = 0;
 	for (; i < result.size(); ++i) {
@@ -246,30 +246,6 @@ std::string StripLeadUntilNumber(const std::string& str)
 	return result;
 }
 
-
-/*
-std::vector<std::string>	SplitString	(const std::string& string, const std::string& delim,
-		unsigned limit)
-{
-	std::vector<std::string> result;
-
-	int start = 0;
-	int end = string.find(delim);
-	unsigned count = 0;
-
-	if (end == std::string::npos)
-		return result;
-
-	while (end != std::string::npos && count < limit) {
-		result.push_back(string.substr(start, end - start));
-		start = end + delim.size();
-		end = string.find(delim, start);
-		++count;
-	}
-
-	return result;
-}
-*/
 
 /*
 	Shamelessly borrowed from xfce4-panel

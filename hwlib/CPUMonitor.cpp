@@ -111,7 +111,6 @@ HWCPUMonitor::Refresh()
 		/proc/stat should never violate the enumumeration, so we make thread
 		assumption that the cpus are listed in order to save CPU time.
 	*/
-//	system("tput clear");
 	for (int cpu = 0; cpu < fThreadCount; ++cpu) {
 		usage.push_back(
 				_CalculateUsage(
@@ -194,7 +193,6 @@ HWCPUMonitor::_SetSched(HWCPUCore& core, HWScheduler sched)
 		cmd += mode;
 
 		HWUtils::ShellRootExec(cmd);
-		//printf("%i: %s\n", thd, mode.c_str());
 	}
 }
 
@@ -250,34 +248,41 @@ HWCPUMonitor::_RefreshFrequency()
 
 	for (auto& line : lines) {
 		if (line.find("processor") == 0) {
-//			printf("%s\n", line.c_str());
 			processor = HWUtils::ExtractTrailingInteger(line);
 			continue;
 		}
 
 		// find core for processor, update frequency
-		for (auto& pair : fCores) {
-//			printf("Core: %i, processor: %i\n", pair.first, processor);
-			for (auto& thread : pair.second.threads) {
+		for (auto& [coreID, core] : fCores) {
+			for (auto& thread : core.threads) {
 				if (thread == processor) {
 					float useMax = 0.0;
-					for (auto thd : pair.second.threads) {
-						if (pair.second.usage[thd].back() > useMax)
-							useMax = pair.second.usage[thd].back();
-						if (pair.second.usage[thd].running_average() > useMax)
-							useMax = pair.second.usage[thd].running_average();
+
+					/*
+						Estimate active cycles when in power saving mode
+						since Ryzen power and clock gates in this mode with
+						extreme aggression.
+
+						This roughly mimicks Ryzen Master's behavior, though
+						we don't probe cc6 states... because I don't know how
+						on Ryzen.
+					*/
+					if (core.scheduler != HWSCHED_POWERSAVE) {
+						useMax = 100.0;
+					} else {
+						for (auto thd : core.threads) {
+							if (core.usage[thd].back() > useMax)
+								useMax = core.usage[thd].back();
+							if (core.usage[thd].running_average() > useMax)
+								useMax = core.usage[thd].running_average();
+						}
 					}
 
-					pair.second.frequency.push(
+					core.frequency.push(
 						(useMax / 100.0) * HWUtils::ExtractTrailingFloat(line));
-					//printf("Core: %i: %s\n", pair.second.coreID, line.c_str());
 					break;
 				}
 			}
 		}
 	}
-
-//	for (auto& pair : fCores) {
-//		printf("%i: %.2f GHz\n", pair.first, (pair.second.frequency.back())/1000.0);
-//	}
 }

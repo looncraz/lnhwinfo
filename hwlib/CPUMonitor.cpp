@@ -60,7 +60,7 @@ HWCPUMonitor::HWCPUMonitor	()
 	for (int i = 0; i < cores.size(); ++i) {
 		fCores[cores[i]].threads.push_back(threads[i]);
 		fCores[cores[i]].coreID = cores[i];
-		fCores[cores[i]].scheduler = HWSCHED_PERFORMANCE;
+		fCores[cores[i]].scheduler = HWSCHED_UNKNOWN;
 	}
 
 

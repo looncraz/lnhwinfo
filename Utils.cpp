@@ -32,6 +32,7 @@ rgb_color mix_color(rgb_color color1, rgb_color color2, uint8 amount)
 }
 
 
+// TODO: we need to get rid of this and just require running as root
 SString		gRootPassword;
 
 bool Run(int argc, char** argv)
@@ -161,7 +162,7 @@ SString ShellRootExec(CString& _command)
 
 
 std::vector<SString> SplitString(CString& s,
- 	CString& separator, unsigned limit)
+	CString& separator, unsigned limit)
 {
    std::vector<SString> output;
 
@@ -182,7 +183,7 @@ std::vector<SString> SplitString(CString& s,
 
 	auto last = s.substr(prev_pos, pos-prev_pos);
 	if (last.size() != 0 && last != separator)
-    	output.push_back(last); // Last word
+		output.push_back(last); // Last word
 
     return output;
 }
@@ -307,9 +308,9 @@ bool ReserveScreenSpace	(Gtk::Window* window)
 	GdkRectangle rect;
 	gdk_window_get_frame_extents(gdkwin, &rect);
 
-	struts[STRUT_RIGHT] 		= rect.width;
+	struts[STRUT_RIGHT]			= rect.width;
 	struts[STRUT_RIGHT_START_Y] = 0;
-	struts[STRUT_RIGHT_END_Y] 	= window->get_screen()->get_height();
+	struts[STRUT_RIGHT_END_Y]	= window->get_screen()->get_height();
 
 	gdk_property_change(gdkwin, net_wm_strut_partial_atom,
 		cardinal_atom, 32, GDK_PROP_MODE_REPLACE,

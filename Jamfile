@@ -45,7 +45,7 @@ if ( $(CLEAN) = 1 )
 
 Main lnhwinfo :
 	[ GLOB $(DEBUG_SOURCE)					: *.cpp ]
-	[ GLOB $(TOP) 							: *.cpp ]
+	[ GLOB $(TOP)							: *.cpp ]
 	[ GLOB $(TOP)/hwlib						: *.cpp ]
 	[ GLOB $(TOP)/gui						: *.cpp ]
 ;

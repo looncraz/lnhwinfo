@@ -44,9 +44,9 @@ private:
 		std::map<SString,	// sensor
 			HWSensorHandler*>>	fHandlers;
 
-			void 				_RefreshCorsair();
+			void				_RefreshCorsair();
 
-			void 				_Invoke(CString& controller,
+			void				_Invoke(CString& controller,
 									CString& sensor);
 
 			Gtk::Box			fBox;

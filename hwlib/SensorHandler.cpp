@@ -70,7 +70,7 @@ HWGenericSensorHandler::Updated(CString& line)
 	fFunc(str);
 
 	SString data = "<span size=\"small\">"
- 		+ HWUtils::StripTrailingWhitespace(str) + "</span>";
+		+ HWUtils::StripTrailingWhitespace(str) + "</span>";
 	fData.set_label(data);
 }
 

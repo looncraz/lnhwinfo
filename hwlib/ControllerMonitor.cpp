@@ -33,7 +33,7 @@ HWController::HWController	(CString& path)
 
 	for (auto& p : fs::directory_iterator(path)) {
 		name = p.path().string().substr(path.size() + 1,
- 				p.path().string().size() - path.size());
+				p.path().string().size() - path.size());
 
 		if (name == "name") {
 			// Our name!

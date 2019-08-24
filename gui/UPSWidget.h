@@ -8,7 +8,7 @@ public:
 	explicit					HWUPSWidget		();
 								~HWUPSWidget	();
 
-			void 				Refresh();
+			void				Refresh();
 private:
 			Gtk::Label			fLabel;
 			HWLevelBar			fBar;

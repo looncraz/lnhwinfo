@@ -23,7 +23,7 @@ public:
 	HWHistory (int maxCount);
 	HWHistory ();
 
-	void 	SetMaxCount	(int);
+	void	SetMaxCount	(int);
 	int		maxCount	() const;
 
 	void push(const T& val){
@@ -70,16 +70,16 @@ template <typename T>
 HWHistory<T>::HWHistory(const HWHistory<T>& copy)
  :	std::list<T>(copy),
 	fRunningAverage(copy.fRunningAverage),
- 	fMaxCount(copy.fMaxCount)
+	fMaxCount(copy.fMaxCount)
 {
 }
 
 
 template <typename T>
 HWHistory<T>::HWHistory(int maxCount)
- : 	std::list<T>(),
+ :	std::list<T>(),
 	fRunningAverage(0),
- 	fMaxCount(maxCount)
+	fMaxCount(maxCount)
 {
 }
 
@@ -88,6 +88,6 @@ template <typename T>
 HWHistory<T>::HWHistory()
  : std::list<T>(),
 	fRunningAverage(0),
- 	fMaxCount(5)
+	fMaxCount(5)
 {
 }

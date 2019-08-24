@@ -62,13 +62,13 @@ HWSensorList::HWSensorList	()
 			});
 	}
 
-	AddHandler("amdgpu", "power1", 		new HWGenericSensorHandler("Power",
+	AddHandler("amdgpu", "power1",	new HWGenericSensorHandler("Power",
 		[](SString& value) {
 			value = value.substr(0, value.size() - 6);
 			value += ".0 W";
 		}));
 
-	AddHandler("amdgpu", "in0", 		new HWGenericSensorHandler("Voltage",
+	AddHandler("amdgpu", "in0",		new HWGenericSensorHandler("Voltage",
 		[](SString& value) {
 			if (value.size() == 3)
 				value.resize(2);
@@ -76,20 +76,20 @@ HWSensorList::HWSensorList	()
 			value = "0." + value + " V";
 		}));
 
-	AddHandler("amdgpu", "freq1", 		new HWGenericSensorHandler("Frequency",
+	AddHandler("amdgpu", "freq1",	new HWGenericSensorHandler("Frequency",
 		[](SString& value) {
 			value = value.substr(0, value.size() - 6);
 			value += " MHz";
 		}));
 
 	AddHandler("amdgpu", "temp1",
- 			new HWTemperatureSensorHandler("Edge", 20.0, 80.0));
+			new HWTemperatureSensorHandler("Edge", 20.0, 80.0));
 
 	AddHandler("amdgpu", "temp2",
- 			new HWTemperatureSensorHandler("Junction", 20.0, 110.0));
+			new HWTemperatureSensorHandler("Junction", 20.0, 110.0));
 
 	AddHandler("amdgpu", "temp3",
- 			new HWTemperatureSensorHandler("HBM", 20.0, 80.0));
+			new HWTemperatureSensorHandler("HBM", 20.0, 80.0));
 
 
 	fBox.pack_start(*(new HWSeparator(10)), 0, 0, 0);
@@ -229,7 +229,7 @@ HWSensorList::AddHandler(CString& controller, CString& sensor,
 		&& fHandlers[controller].find(sensor) != fHandlers[controller].end()) {
 
 		fprintf(stderr, "Sensors: %s/%s - Handler already exists!\n",
- 			controller.c_str(), sensor.c_str());
+			controller.c_str(), sensor.c_str());
 
 		return false;
 	}
@@ -252,7 +252,7 @@ HWSensorList::AddHandler(CString& controller, CString& sensor,
 
 bool
 HWSensorList::AddPathHandler(CString& name, CString& path, uint32 interval,
- 	HWSensorHandler* handler, std::function<void(HWPathMonitorItem&)> func)
+	HWSensorHandler* handler, std::function<void(HWPathMonitorItem&)> func)
 {
 	if (!AddHandler(name, path, handler))
 		return false;

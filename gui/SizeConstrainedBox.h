@@ -15,14 +15,14 @@ public:
 
 			int					MinWidth () const;
 			int					MaxWidth () const;
-			int 				MinHeight() const;
+			int					MinHeight() const;
 			int					MaxHeight()	const;
 
-			void 				SetSizeConstraints	(	int minWidth = -1,
+			void				SetSizeConstraints	(	int minWidth = -1,
 														int maxWidth = -1,
 														int minHeight = -1,
 														int maxHeight = -1 );
-	virtual	void 				on_size_allocate(Gtk::Allocation&) override;
+	virtual	void				on_size_allocate(Gtk::Allocation&) override;
 
 
 private:

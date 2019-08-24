@@ -35,7 +35,7 @@ public:
 		void					SetFatal(bool);
 		void					SetError(RErrorType);
 
-		bool	 				operator==(RErrorType) const;
+		bool					operator==(RErrorType) const;
 		explicit				operator bool () const;
 			// evaluates to true if we hold an error. C++11 safe-bool
 

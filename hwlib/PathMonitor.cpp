@@ -27,7 +27,7 @@ HWPathMonitor::~HWPathMonitor	(){}
 
 void
 HWPathMonitor::Add(CString& name, CString& path, uint32 milliseconds,
- 	std::function<void(HWPathMonitorItem&)> func)
+	std::function<void(HWPathMonitorItem&)> func)
 {
 	if (milliseconds < fShortestInterval)
 		fShortestInterval = milliseconds;

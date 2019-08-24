@@ -18,8 +18,8 @@ using time_point_t = std::chrono::time_point<std::chrono::system_clock>;
 #	define int16 short
 #	define uint8 uint8_t
 
-typedef const std::string 	CString;
-typedef std::string 		SString;
+typedef const std::string	CString;
+typedef std::string			SString;
 typedef std::deque<SString> SStringList;
 
 template<typename T>

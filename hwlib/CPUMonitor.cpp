@@ -2,17 +2,6 @@
 #include "Utils.h"
 
 
-/*
-struct HWCPUCore {
-	int							coreID;
-	std::map<HWHistory<>>		usage; 		// [thread, history]
-	std::list<int>				threads;	// which threads belong to this core
-	HWHistory<>					frequency;
-	HWHistory<bool>				sleep;		// TODO!
-	HWHistory<>					voltage; 	// TODO!
-};
-*/
-
 int on_cores_timer(void*)
 {
 	if (gCPUMonitor != nullptr)
@@ -208,7 +197,7 @@ HWCPUMonitor::_Invoke(int core)
 
 float
 HWCPUMonitor::_CalculateUsage(const std::deque<uint64>& first,
-	 	const std::deque<uint64>& second)
+		const std::deque<uint64>& second)
 {
 	uint64	firstTotalJiffies = 0,
 			firstTotalWorkies = 0,

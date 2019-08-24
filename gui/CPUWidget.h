@@ -13,7 +13,7 @@ public:
 	virtual						~HWCPUWidget	();
 
 private:
-			void 				_Refresh		(const HWCPUCore& core);
+			void				_Refresh		(const HWCPUCore& core);
 			SizeConstrainedBox	fThreadBox;
 			int					fCoreID;
 		std::map<int, HWLevelBar*>

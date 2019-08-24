@@ -18,11 +18,11 @@ enum HWScheduler {
 
 struct HWCPUCore {
 	int							coreID;
-	std::map<int, HWHistory<>>	usage; 		// [thread, history]
+	std::map<int, HWHistory<>>	usage;		// [thread, history]
 	std::list<int>				threads;	// which threads belong to this core
 	HWHistory<>					frequency;
 	HWHistory<bool>				sleep;		// TODO!
-	HWHistory<>					voltage; 	// TODO!
+	HWHistory<>					voltage;	// TODO!
 	HWScheduler					scheduler;
 };
 
@@ -37,15 +37,15 @@ public:
 			void				AddListener		(int core,
 									std::function<void(const HWCPUCore&)>);
 
-			void 				ForEachCore(const std::function<void(const HWCPUCore&)>&) const;
-			void 				ForCore(int core, std::function<void(const HWCPUCore&)>&) const;
+			void				ForEachCore(const std::function<void(const HWCPUCore&)>&) const;
+			void				ForCore(int core, std::function<void(const HWCPUCore&)>&) const;
 private:
 			void				_Invoke(int core);
-			void 				_RefreshFrequency();
+			void				_RefreshFrequency();
 			float				_CalculateUsage(const std::deque<uint64>&,
 									const std::deque<uint64>&);
 
-			void 				_SetSched(HWCPUCore&, HWScheduler);
+			void				_SetSched(HWCPUCore&, HWScheduler);
 
 	std::map<int, std::vector<std::function<void(const HWCPUCore&)>>>
 								fListeners;

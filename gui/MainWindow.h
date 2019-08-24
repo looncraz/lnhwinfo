@@ -15,8 +15,8 @@ public:
 private:
 
 	virtual	void				on_show			()		override;
-	virtual void 				on_size_allocate(Gtk::Allocation&)	override;
-	virtual void 				on_realize() override;
+	virtual void				on_size_allocate(Gtk::Allocation&)	override;
+	virtual void				on_realize() override;
 
 	virtual	bool				on_button_click(GdkEventButton*);
 

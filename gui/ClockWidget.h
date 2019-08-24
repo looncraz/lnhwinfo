@@ -8,7 +8,7 @@ public:
 								HWClockWidget	();
 								~HWClockWidget	();
 
-			void 				Refresh();
+			void				Refresh();
 
 private:
 			Gtk::Label			fTime;

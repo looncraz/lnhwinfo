@@ -28,7 +28,7 @@ public:
 
 		edge:         +33.0°C  (crit = +100.0°C, hyst = -273.1°C)
 	*/
-	virtual void 				Updated(CString&) = 0;
+	virtual void				Updated(CString&) = 0;
 	virtual	void				Updated(const HWSensor&) = 0;
 };
 
@@ -42,13 +42,13 @@ public:
 	virtual						~HWGenericSensorHandler	();
 
 	virtual	Gtk::Box&			CreateGUI();
-	virtual void 				Updated(CString&);
+	virtual void				Updated(CString&);
 	virtual	void				Updated(const HWSensor&);
 private:
 
 			Gtk::Box			fBox;
 			Gtk::Label			fName,
- 								fData;
+								fData;
 
 			SString			fNameOverride;
 			std::function<void(SString&)>	fFunc;
@@ -63,13 +63,13 @@ public:
 	virtual						~HWTemperatureSensorHandler	();
 
 	virtual	Gtk::Box&			CreateGUI();
-	virtual void 				Updated(CString&);
+	virtual void				Updated(CString&);
 	virtual	void				Updated(const HWSensor&);
 private:
 
 			Gtk::Box			fOuterBox, fBox;
 			Gtk::Label			fName,
- 								fData,
+								fData,
 								fUnit;
 
 			HWLevelBar			fLevel;
@@ -87,13 +87,13 @@ public:
 	virtual						~HWUsageSensorHandler	();
 
 	virtual	Gtk::Box&			CreateGUI();
-	virtual void 				Updated(CString&);
+	virtual void				Updated(CString&);
 	virtual	void				Updated(const HWSensor&);
 private:
 
 			Gtk::Box			fOuterBox, fBox;
 			Gtk::Label			fName,
- 								fData,
+								fData,
 								fUnit;
 
 			HWLevelBar			fLevel;

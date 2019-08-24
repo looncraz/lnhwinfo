@@ -49,9 +49,6 @@ bool Run(int argc, char** argv)
 	if (gRootPassword.size() == 0)
 		gRootPassword = getpass("Root Password: ");
 
-	ShellExec("kill $(ps aux | grep lnhwinfo | awk '{print $2}' | head -n 1)"
-		" > /dev/null");
-
 	return gRootPassword.size() != 0;
 }
 

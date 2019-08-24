@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "CPUMonitor.h"
 #include "MainWindow.h"
+#include "ControllerMonitor.h"
 #include "Sensors.h"
 
 
@@ -28,6 +29,8 @@ void
 HWApplication::on_activate()
 {
 	new HWCPUMonitor();
+	new HWPathMonitor();
+	new HWControllerMonitor();
 	new HWSensorList();	// must be before HWMainWindow
 
 	fMainWindow = new HWMainWindow();

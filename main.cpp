@@ -3,6 +3,8 @@
 
 int main(int argc, char **argv)
 {
-	HWUtils::Run(argc, argv);
-	return (new HWApplication())->run(1, argv);
+	if (HWUtils::Run(argc, argv))
+		return (new HWApplication())->run(1, argv);
+
+	fprintf(stderr, "Root password required!\n");
 }

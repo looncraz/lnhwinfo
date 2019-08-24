@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "HWTypes.h"
+#include "PathMonitor.h"
 #include "SensorHandler.h"
 
 
@@ -24,12 +25,20 @@ public:
 			bool				AddHandler	(	const std::string& controller,
 												const std::string& sensor,
 												HWSensorHandler* );
-/*
-			void 				RemoveHandler(	const std::string& controller,
-												const std::string& sensor);
 
-			void 				RemoveHandler(	HWSensorHandler*);
-*/
+			bool				AddPathHandler	(const std::string& name,
+												const std::string& path,
+												uint32 milliseconds,
+												HWSensorHandler*,
+									std::function<void(HWPathMonitorItem&)>
+									= [](HWPathMonitorItem&){});
+
+			// use a specific path
+			bool				AddHandler	(	const std::string& path,
+												HWSensorHandler* );
+
+			void				PathRefreshed	(const HWPathMonitorItem&);
+
 private:
 	std::map<std::string,		// controller
 		std::map<std::string,	// sensor

@@ -14,11 +14,16 @@ namespace HWUtils {
 	rgb_color mix_color(rgb_color color1, rgb_color color2, uint8 amount);
 
 	// for detecting "--rootpw=password"
-	void						Run(int argc, char** argv);
+	bool						Run(int argc, char** argv);
 
 	std::deque<uint64> 			ExtractAllIntegers		(std::string);
 	int 						ExtractTrailingInteger	(std::string);
 	float						ExtractTrailingFloat	(std::string);
+
+	bool						ReadFileAsInt(std::string path, int32* out);
+	bool 						ReadFileAsString(std::string path,
+ 									std::string* out);
+
 
 	std::string					ShellExec	(const std::string& command);
 	std::string					ShellRootExec(const std::string& command);

@@ -34,9 +34,8 @@ rgb_color mix_color(rgb_color color1, rgb_color color2, uint8 amount)
 
 std::string		gRootPassword;
 
-void Run(int argc, char** argv)
+bool Run(int argc, char** argv)
 {
-
 	for (int i = 1; i < argc; ++i) {
 		std::string str = argv[i];
 		auto start = str.find("--rootpw=");
@@ -46,6 +45,14 @@ void Run(int argc, char** argv)
 			fprintf(stderr, "Uknown option: %s\n", argv[i]);
 		}
 	}
+
+	if (gRootPassword.size() == 0)
+		gRootPassword = getpass("Root Password: ");
+
+	ShellExec("kill $(ps aux | grep lnhwinfo | awk '{print $2}' | head -n 1)"
+		" > /dev/null");
+
+	return gRootPassword.size() != 0;
 }
 
 std::deque<uint64> ExtractAllIntegers(std::string line) {
@@ -71,6 +78,10 @@ int ExtractTrailingInteger(std::string line) {
 		buf.insert(0, 1, line.back());
 		line.pop_back();
 	}
+
+	if (buf.size() == 0)
+		return -1;
+
 	return atoi(buf.c_str());
 }
 
@@ -83,6 +94,47 @@ float ExtractTrailingFloat(std::string line) {
 	}
 	return atof(buf.c_str());
 }
+
+
+bool ReadFileAsInt(std::string path, int32* out)
+{
+	if (path.size() == 0 || out == nullptr)
+		return false;
+
+	std::ifstream ifile;
+	std::string buf;
+
+	ifile.open(path);
+	if (!getline(ifile, buf)) {
+		fprintf(stderr, "Can't open \"%s\"\n", path.c_str());
+		ifile.close();
+		return false;
+	}
+
+	// TODO: validate file contents as integer data?
+	*out = atoi(buf.c_str());
+	ifile.close();
+	return true;
+}
+
+
+
+bool ReadFileAsString(std::string path, std::string* out)
+{
+	if (out == nullptr)
+		return false;
+
+	std::ifstream ifile;
+	ifile.open(path);
+	if (!std::getline(ifile, *out)) {
+		fprintf(stderr, "Unable to read file: %s\n", path.c_str());
+		ifile.close();
+		return false;
+	}
+	ifile.close();
+	return true;
+}
+
 
 
 std::string ShellExec	(const std::string& command)

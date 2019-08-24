@@ -1,6 +1,7 @@
 #pragma once
 
 #include <gtkmm.h>
+#include "ControllerMonitor.h"
 #include "LevelBar.h"
 #include "Separator.h"
 
@@ -28,17 +29,21 @@ public:
 		edge:         +33.0°C  (crit = +100.0°C, hyst = -273.1°C)
 	*/
 	virtual void 				Updated(const std::string&) = 0;
+	virtual	void				Updated(const HWSensor&) = 0;
 };
 
 
 class HWGenericSensorHandler : public HWSensorHandler {
 public:
 								HWGenericSensorHandler	();
-								HWGenericSensorHandler	(const std::string&);
+								HWGenericSensorHandler	(const std::string&,
+									std::function<void(std::string&)>
+										= [](std::string&){});
 	virtual						~HWGenericSensorHandler	();
 
 	virtual	Gtk::Box&			CreateGUI();
 	virtual void 				Updated(const std::string&);
+	virtual	void				Updated(const HWSensor&);
 private:
 
 			Gtk::Box			fBox;
@@ -46,6 +51,7 @@ private:
  								fData;
 
 			std::string			fNameOverride;
+			std::function<void(std::string&)>	fFunc;
 };
 
 
@@ -58,6 +64,7 @@ public:
 
 	virtual	Gtk::Box&			CreateGUI();
 	virtual void 				Updated(const std::string&);
+	virtual	void				Updated(const HWSensor&);
 private:
 
 			Gtk::Box			fOuterBox, fBox;
@@ -70,4 +77,27 @@ private:
 
 			std::string			fNameOverride;
 			float				fMinTemp, fMaxTemp;
+};
+
+
+class HWUsageSensorHandler : public HWSensorHandler {
+public:
+								HWUsageSensorHandler	();
+								HWUsageSensorHandler	(const std::string&);
+	virtual						~HWUsageSensorHandler	();
+
+	virtual	Gtk::Box&			CreateGUI();
+	virtual void 				Updated(const std::string&);
+	virtual	void				Updated(const HWSensor&);
+private:
+
+			Gtk::Box			fOuterBox, fBox;
+			Gtk::Label			fName,
+ 								fData,
+								fUnit;
+
+			HWLevelBar			fLevel;
+			HWSeparator			fSep;
+
+			std::string			fNameOverride;
 };

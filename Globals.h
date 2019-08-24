@@ -1,14 +1,24 @@
 #pragma once
 
+#include <chrono>
+#include <deque>
+#include <functional>
+#include <map>
+#include <string>
+
 
 #define WINDOW_WIDTH	180.0
 
+using time_ms_t = std::chrono::milliseconds;
+using time_point_t = std::chrono::time_point<std::chrono::system_clock>;
 
 #	define uint64 unsigned long long
 #	define uint32 unsigned long
 #	define int32 long
 #	define int16 short
 #	define uint8 uint8_t
+
+typedef std::deque<std::string> HWStringList;
 
 typedef struct rgb_color {
 	uint8		red;
@@ -51,3 +61,5 @@ typedef struct rgb_color {
 	}
 
 } rgb_color;
+
+#include "Utils.h"

@@ -7,4 +7,5 @@ int main(int argc, char **argv)
 		return (new HWApplication())->run(1, argv);
 
 	fprintf(stderr, "Root password required!\n");
+	return 1;
 }

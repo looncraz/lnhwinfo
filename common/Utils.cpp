@@ -1,12 +1,18 @@
+#include <algorithm>
 #include <array>
 #include <cstdio>
 #include <iostream>
 #include <fstream>
+#include <glob.h> // glob(), globfree()
 #include <memory>
 #include <stdexcept>
 #include <stdio.h>
+#include <stdexcept>
+#include <sstream>
 #include <string>
 #include <unistd.h>
+#include <regex>
+
 
 #include <gtkmm.h>
 
@@ -116,7 +122,6 @@ bool ReadFileAsInt(SString path, int32* out)
 }
 
 
-
 bool ReadFileAsString(SString path, SString* out)
 {
 	if (out == nullptr)
@@ -132,7 +137,6 @@ bool ReadFileAsString(SString path, SString* out)
 	ifile.close();
 	return true;
 }
-
 
 
 SString ShellExec	(CString& command)
@@ -164,28 +168,19 @@ SString ShellRootExec(CString& _command)
 std::vector<SString> SplitString(CString& s,
 	CString& separator, unsigned limit)
 {
-   std::vector<SString> output;
+	std::vector<SString> result;
 
-    SString::size_type prev_pos = 0, pos = 0;
+	if (s.size() == 0 || separator.size() == 0 || limit == 0)
+		return result;
 
-	unsigned count = 0;
-	while(count < limit && (pos = s.find(separator, pos)) != SString::npos)
-    {
-		++count;
-        SString substring( s.substr(prev_pos, pos-prev_pos) );
+	std::regex reg(SString("\\") + separator + "+");
 
-		if (substring.size() != 0 && substring != separator) {
-			output.push_back(substring);
-		}
+	std::sregex_token_iterator iter(s.begin(), s.end(), reg, -1);
+	std::sregex_token_iterator end;
 
-        prev_pos = ++pos;
-    }
+	result = std::vector<SString>(iter, end);
 
-	auto last = s.substr(prev_pos, pos-prev_pos);
-	if (last.size() != 0 && last != separator)
-		output.push_back(last); // Last word
-
-    return output;
+	return result;
 }
 
 
@@ -246,6 +241,54 @@ SString StripLeadUntilNumber(CString& str)
 	result = result.substr(i, result.size() - i);
 	return result;
 }
+
+
+void ReplaceAll(SString& str, CString& from, CString& to) {
+    size_t start_pos = 0;
+    while((start_pos = str.find(from, start_pos)) != std::string::npos) {
+        str.replace(start_pos, from.length(), to);
+        start_pos += to.length();
+    }
+}
+
+
+void _ParsePaths_ExpandWildcards(CString& pattern, SStringList& out)
+{
+	using namespace std;
+
+	glob_t pglob;
+	memset(&pglob, 0, sizeof(pglob));
+
+	if(glob(pattern.c_str(), GLOB_ONLYDIR, nullptr, &pglob) != 0) {
+		globfree(&pglob);
+		fprintf(stderr, "glob() error!\n");
+		return;
+	}
+
+	for(size_t i = 0; i < pglob.gl_pathc; ++i) {
+		out.push_back(pglob.gl_pathv[i]);
+	}
+
+	globfree(&pglob);
+}
+
+
+bool ParsePaths(const SStringList& in, SStringList* out,
+	const SStringMap<SString>& subs)
+{
+	if (out == nullptr)
+		return false;
+
+	for (SString pin : in) {
+		for (auto& [match, sub] : subs)
+			ReplaceAll(pin, match, sub);
+
+		_ParsePaths_ExpandWildcards(pin, *out);
+	}
+
+	return out->size() >= in.size();
+}
+
 
 
 /*

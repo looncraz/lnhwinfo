@@ -1,19 +1,37 @@
 #pragma once
 
+#include <algorithm>
+#include <atomic>
+#include <cctype>
 #include <chrono>
+#include <cstdio>
 #include <deque>
 #include <functional>
 #include <map>
+#include <mutex>
 #include <string>
+#include <thread>
+
+#if __cplusplus >= 201402L
+#	include <filesystem>
+namespace fs = std::filesystem;
+#elif __cplusplus > 199711L
+#	include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+#else
+#	error "Unsupported C++ version! Set C++11 or newer!"
+#endif
 
 
 #define WINDOW_WIDTH	180.0
+#define MAX_UPDATE_RATE 100 // in milliseconds (10/sec)
 
 using time_ms_t = std::chrono::milliseconds;
 using time_point_t = std::chrono::time_point<std::chrono::system_clock>;
 
 #	define uint64 unsigned long long
 #	define uint32 unsigned long
+#	define int64 long long
 #	define int32 long
 #	define int16 short
 #	define uint8 uint8_t
@@ -21,6 +39,11 @@ using time_point_t = std::chrono::time_point<std::chrono::system_clock>;
 typedef const std::string	CString;
 typedef std::string			SString;
 typedef std::deque<SString> SStringList;
+
+struct HWPoint {
+	int	x;
+	int y;
+};
 
 template<typename T>
 class SStringMap : public std::map<SString, T>{};
@@ -67,4 +90,19 @@ typedef struct rgb_color {
 
 } rgb_color;
 
+
+template <typename T, typename I>
+auto ContainerFindItem(T& t, I i)
+{
+	return std::find(t.begin(), t.end(), i);
+}
+
+
+template <typename T, typename I>
+bool ContainerHasItem(T& t, I i)
+{
+	return 	ContainerFindItem(t, i) != t.end();
+}
+
+#include "Object.h"
 #include "Utils.h"

@@ -37,6 +37,11 @@ namespace HWUtils {
 	SString					StripLeadingWhitespace(CString&);
 	SString					StripLeadUntilNumber(CString&);
 
+	void					ReplaceAll(SString&, CString& from, CString& to);
+
+	bool					ParsePaths(const SStringList&, SStringList* out,
+								const SStringMap<SString>& subs = {});
+
 	/*
 		Modify X11 screen struts to prevent windows from being maximized
 		and taking over a portion of the screen (an edge).

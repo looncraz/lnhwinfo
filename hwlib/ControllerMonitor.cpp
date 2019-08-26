@@ -1,16 +1,6 @@
 #include "ControllerMonitor.h"
+#include "Globals.h"
 #include "Utils.h"
-
-#if __cplusplus >= 201402L
-#	include <filesystem>
-namespace fs = std::filesystem;
-#elif __cplusplus > 199711L
-#	include <experimental/filesystem>
-namespace fs = std::experimental::filesystem;
-#else
-#	error "Unsupported C++ version! Set C++11 or newer!"
-#endif
-
 
 
 HWController::HWController	()

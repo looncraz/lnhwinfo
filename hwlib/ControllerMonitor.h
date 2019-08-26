@@ -18,7 +18,7 @@ public:
 								HWController	(CString& path);
 								~HWController	();
 
-	const	SString&		Name		() const;
+	const	SString&			Name		() const;
 	const	HWSensorMap&		Sensors		() const;
 
 		// Refresh calls are ignored if not enough time has passed...

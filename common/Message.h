@@ -7,6 +7,7 @@ class HWMessage {
 public:
 								HWMessage	(CString& what = "");
 								HWMessage	(const HWMessage&);
+								HWMessage	(HWMessage&&);
 								~HWMessage	();
 
 			void				PrintToStream	() const;
@@ -53,6 +54,7 @@ public:
 	SString						What;
 
 			HWMessage&			operator = (const HWMessage& other);
+			HWMessage&			operator = (HWMessage&& move);
 			bool				operator == (const HWMessage& other) const;
 			bool				operator != (const HWMessage& other) const;
 private:

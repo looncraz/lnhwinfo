@@ -15,7 +15,8 @@ public:
 			void				StartWatching	(CString& who, CString& what);
 			void				StopWatching	(CString& who, CString& what);
 
-	virtual	void				Updated	(CString& who, const HWMessage&) = 0;
+	virtual	void				Updated	(CString& who, HWMessage&&) = 0;
+		// the message is moved in Updated to avoid copies...
 
 	const SStringMap<SStringList>&	Watching	() const;
 

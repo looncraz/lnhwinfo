@@ -32,7 +32,8 @@ protected:
 				constructor!
 			*/
 
-			void				Update	(CString& what, const HWMessage&);
+			void				Update	(CString& what, HWMessage&&);
+				// we take ownership of data (no copying!)
 
 	virtual	void				Refresh	() = 0;
 		/*

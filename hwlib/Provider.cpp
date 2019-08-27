@@ -101,9 +101,9 @@ HWProvider::SetOnline	(bool online)
 
 
 void
-HWProvider::Update	(CString& what, const HWMessage& message)
+HWProvider::Update	(CString& what, HWMessage&& message)
 {	// This gets called from Refresh() with fMutex held.
-	fPendingUpdates[what] = message;
+	fPendingUpdates[what] = std::move(message);
 }
 
 
@@ -111,7 +111,6 @@ const SStringMap<std::deque<HWProviderClient*>>&
 HWProvider::ClientCache() const
 {
 	std::lock_guard<std::mutex> _(fMutex);
-
 	return fClientCache;
 }
 
@@ -217,9 +216,7 @@ HWProvider::_NotifyClients()
 			continue; // no watchers!  Cycle waster!
 
 		for (auto& client : fClientCache[what]) {
-			client->Updated(Name(), value);
+			client->Updated(Name(), std::move(value));
 		}
 	}
-
-	fPendingUpdates.clear();
 }

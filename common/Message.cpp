@@ -142,6 +142,12 @@ HWMessage::HWMessage(const HWMessage& other)
 }
 
 
+HWMessage::HWMessage(HWMessage&& move)
+{
+	*this = std::move(move);
+}
+
+
 HWMessage::~HWMessage	()
 {
 	MakeEmpty();
@@ -159,6 +165,16 @@ HWMessage::operator = (const HWMessage& other)
 		fData[name]->value = data->value;
 	}
 
+	return *this;
+}
+
+
+HWMessage&
+HWMessage::operator = (HWMessage&& other)
+{
+	// ah... the advantages of using STL
+	What = std::move(other.What);
+	fData = std::move(other.fData);
 	return *this;
 }
 

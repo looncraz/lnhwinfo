@@ -6,6 +6,7 @@
 class HWMessage {
 public:
 								HWMessage	(CString& what = "");
+								HWMessage	(const HWMessage&);
 								~HWMessage	();
 
 			void				PrintToStream	() const;
@@ -18,29 +19,31 @@ public:
 			SString				Flatten		() const;
 			bool				Unflatten	(CString&);
 
-			bool				FindBool	(CString&, bool&) const;
-			bool				FindInteger	(CString&, uint64&) const;
-			bool				FindInteger	(CString&, int64&) const;
-			bool				FindFloat	(CString&, double&) const;
-			bool				FindString	(CString&, SString&) const;
-			bool				FindData	(CString&, void**, int* len) const;
+			bool				Find		(CString&, bool&) const;
+			bool				Find		(CString&, uint64&) const;
+			bool				Find		(CString&, int64&) const;
+			bool				Find		(CString&, double&) const;
+			bool				Find		(CString&, SString&) const;
+			bool				Find		(CString&, void**, int* len) const;
 				// we allocate the data, but you own it!
 
 			// fails if name exists
-			bool				AddBool		(CString&, bool);
-			bool				AddInteger	(CString&, uint64);
-			bool				AddInteger	(CString&, int64);
-			bool				AddFloat	(CString&, double);
-			bool				AddString	(CString&, CString&);
-			bool				AddData		(CString&, const void*, int len);
+			bool				Add			(CString&, bool);
+			bool				Add			(CString&, uint64);
+			bool				Add			(CString&, int64);
+			bool				Add			(CString&, double);
+			bool				Add			(CString&, CString&);
+			bool				Add			(CString&, const char*);
+			bool				Add			(CString&, const void*, int len);
 
 			// creates name if it doesn't exist
-			bool				SetBool		(CString&, bool);
-			bool				SetInteger	(CString&, uint64);
-			bool				SetInteger	(CString&, int64);
-			bool				SetFloat	(CString&, double);
-			bool				SetString	(CString&, CString&);
-			bool				SetData		(CString&, const void*, int len);
+			bool				Set			(CString&, bool);
+			bool				Set			(CString&, uint64);
+			bool				Set			(CString&, int64);
+			bool				Set			(CString&, double);
+			bool				Set			(CString&, CString&);
+			bool				Set			(CString&, const char*);
+			bool				Set			(CString&, const void*, int len);
 
 			// Data is stored in second string
 			void				ForEach	(
@@ -49,6 +52,9 @@ public:
 
 	SString						What;
 
+			HWMessage&			operator = (const HWMessage& other);
+			bool				operator == (const HWMessage& other) const;
+			bool				operator != (const HWMessage& other) const;
 private:
 	class HWMData;
 	std::unordered_map<SString, HWMData*> 	fData;

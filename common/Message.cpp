@@ -12,16 +12,12 @@
 class HWMessage::HWMData {
 public:
 	HWMData	(){
-		puts("new HWMData");
 	}
 	~HWMData(){
-		puts("del  HWMData");
 	}
 
 	HWMData(CString& unflatten)
 	{
-		printf("HWMData (%s)\n", unflatten.c_str());
-
 		auto div = unflatten.find(":");
 		if (div == SString::npos) return;
 
@@ -43,7 +39,7 @@ public:
 	SString					value;
 
 	#define SET_TO(X, Y) void SetTo(X val) { type = Y; value = std::to_string(val);	\
-		printf("%s:%s\n", type.c_str(), value.c_str()); }
+		/*printf("%s:%s\n", type.c_str(), value.c_str());*/ }
 
 	SET_TO(bool,	kBoolType)
 	SET_TO(uint64,	kIntType)
@@ -53,6 +49,12 @@ public:
 	#undef SET_TO
 
 	void SetTo(CString& val)
+	{
+		type = kStringType;
+		value = val;
+	}
+
+	void SetTo(const char* val)
 	{
 		type = kStringType;
 		value = val;
@@ -119,6 +121,7 @@ public:
 			return false;
 		}
 		*len = value.size();
+		memcpy(*out, value.c_str(), *len);
 		return true;
 	}
 
@@ -133,9 +136,63 @@ HWMessage::HWMessage(CString& what)
 }
 
 
+HWMessage::HWMessage(const HWMessage& other)
+{
+	*this = other;
+}
+
+
 HWMessage::~HWMessage	()
 {
 	MakeEmpty();
+}
+
+
+HWMessage&
+HWMessage::operator = (const HWMessage& other)
+{
+	What = other.What;
+
+	for (auto& [name, data] : other.fData) {
+		fData[name] = new HWMData();
+		fData[name]->type = data->type;
+		fData[name]->value = data->value;
+	}
+
+	return *this;
+}
+
+
+bool
+HWMessage::operator == (const HWMessage& other) const
+{
+	if (other.What != What || other.fData.size() != fData.size())
+ 		return false;
+
+	/*
+		We must do a deep data comparison!
+		we do NOT, however, care about the order...
+		this has a performance cost, but is a necessity when using an
+		unordered_map which is faster in the common case.
+	*/
+
+	for (auto& [key, data] : other.fData) {
+		auto iter = fData.find(key);
+		if (iter == fData.end())	return false;
+
+		auto& ours = fData.at(key);
+		if (ours->type != data->type || ours->value != data->value)
+			return false;
+	}
+
+	return true;
+}
+
+
+bool
+HWMessage::operator != (const HWMessage& other) const
+{
+	return !(*this == other);
 }
 
 
@@ -276,19 +333,19 @@ HWMessage::Unflatten(CString& input)
 	return true;
 }
 
-#define FIND_FUNC(N, T) bool HWMessage::Find##N (CString& name, T & out) const	\
-{	if (!HasName(name))	return false; return fData.at(name)->Get(out); }
+#define FIND_FUNC(T) bool HWMessage::Find (CString& name, T & out) const	\
+{if (!HasName(name))	return false; return fData.at(name)->Get(out); }
 
 
-FIND_FUNC(Bool, bool)
-FIND_FUNC(Integer, uint64)
-FIND_FUNC(Integer, int64)
-FIND_FUNC(Float, double)
-FIND_FUNC(String, SString)
+FIND_FUNC(bool)
+FIND_FUNC(uint64)
+FIND_FUNC(int64)
+FIND_FUNC(double)
+FIND_FUNC(SString)
 
 
 bool
-HWMessage::FindData	(CString& name, void** out, int* len) const
+HWMessage::Find	(CString& name, void** out, int* len) const
 {
  if (!HasName(name))
    return false;
@@ -297,27 +354,28 @@ HWMessage::FindData	(CString& name, void** out, int* len) const
 }
 
 
-#define ADD_FUNC(N, T) bool HWMessage::Add##N (CString& name, T value)	\
+#define ADD_FUNC(T) bool HWMessage::Add (CString& name, T value)	\
 {	if (HasName(name))	return false; \
-	return Set##N (name, value); }
+	return Set(name, value); }
 
-ADD_FUNC(Bool, bool)
-ADD_FUNC(Integer, uint64)
-ADD_FUNC(Integer, int64)
-ADD_FUNC(Float, double)
-ADD_FUNC(String, CString&)
+ADD_FUNC(bool)
+ADD_FUNC(uint64)
+ADD_FUNC(int64)
+ADD_FUNC(double)
+ADD_FUNC(CString&)
+ADD_FUNC(const char*)
 
 
 bool
-HWMessage::AddData		(CString& name, const void* data, int len)
+HWMessage::Add		(CString& name, const void* data, int len)
 {
  if (HasName(name))
    return false;
 
- return SetData(name, data, len);
+ return Set(name, data, len);
 }
 
-#define SET_FUNC(N, T) bool HWMessage::Set##N(CString& name, T value)	\
+#define SET_FUNC(T) bool HWMessage::Set(CString& name, T value)	\
 {	auto& data = fData[name];							\
 	if (data == nullptr) data = new HWMData();			\
 	data->SetTo(value);									\
@@ -325,20 +383,22 @@ HWMessage::AddData		(CString& name, const void* data, int len)
 }
 
 
-SET_FUNC(Bool, bool)
-SET_FUNC(Integer, uint64)
-SET_FUNC(Integer, int64)
-SET_FUNC(Float, double)
-SET_FUNC(String, CString&)
+SET_FUNC(bool)
+SET_FUNC(uint64)
+SET_FUNC(int64)
+SET_FUNC(double)
+SET_FUNC(CString&)
+SET_FUNC(const char*)
 
 
 bool
-HWMessage::SetData(CString& name, const void* ptr, int len)
+HWMessage::Set(CString& name, const void* ptr, int len)
 {
-	if (len == 0 || ptr == nullptr)
+	if (len == 0 || ptr == nullptr) {
 		return false;
+	}
 
-	auto* data = fData[name];
+	auto& data = fData[name];
 	if (data == nullptr) data = new HWMData();
 	data->SetTo(ptr, len);
 	return true;

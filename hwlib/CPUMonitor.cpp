@@ -166,11 +166,11 @@ HWCPUMonitor::_SetSched(HWCPUCore& core, HWScheduler sched)
 
 	core.scheduler = sched;
 
+	/*
+		We have to set the governor per thread since that's how the kernel
+		handles them.
+	*/
 	for (auto& thd : core.threads) {
-		SString cmd = "cpufreq-set -c ";
-		cmd += std::to_string(thd);
-		cmd += " -g ";
-
 		SString mode;
 
 		switch (sched) {
@@ -179,9 +179,9 @@ HWCPUMonitor::_SetSched(HWCPUCore& core, HWScheduler sched)
 			case HWSCHED_PERFORMANCE: mode = "performance"; break;
 		}
 
-		cmd += mode;
-
-		HWUtils::ShellRootExec(cmd);
+		SString path = "/sys/devices/system/cpu/cpu" + std::to_string(thd);
+		path += "/cpufreq/scaling_governor";
+		HWUtils::WriteToFile(path, mode);
 	}
 }
 

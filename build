@@ -1,0 +1,25 @@
+#!/bin/bash
+
+if [[ "$USER" != "root" ]]
+then
+	echo Must run as root!
+	exit 1;
+fi
+
+
+dtest="$1 $2 $3"
+
+if [[ "$dtest" =~ "debug" ]]
+then
+	echo "DEBUG!"
+	dtest=$(echo ${dtest/debug/})
+	DEBUG=1 /usr/bin/jam -j 16 -q $dtest
+else
+	/usr/bin/jam -j 16 -q $dtest
+fi
+
+#
+#	Set capabilities so we don't need root!
+#
+sudo setcap CAP_DAC_OVERRIDE=eip objects/lnhwinfo 	2> /dev/null
+sudo setcap CAP_DAC_OVERRIDE=eip objects/test 		2> /dev/null

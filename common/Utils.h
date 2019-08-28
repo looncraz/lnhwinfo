@@ -24,6 +24,8 @@ namespace HWUtils {
 	bool					ReadFileAsString(SString path,
 								SString* out);
 
+	bool					WriteToFile(CString& path, CString& out);
+	bool					AppendToFile(CString& path, CString& out);
 
 	SString					ShellExec	(CString& command);
 	SString					ShellRootExec(CString& command);

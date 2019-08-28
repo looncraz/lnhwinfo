@@ -139,6 +139,36 @@ bool ReadFileAsString(SString path, SString* out)
 }
 
 
+bool WriteToFile(CString& path, CString& data)
+{
+	std::ofstream ofile;
+	ofile.open(path);
+	if (!ofile.is_open()) {
+		fprintf(stderr, "Can't open \"%s\" to write!", path.c_str());
+		return false;
+	}
+
+	ofile << data;
+	ofile.flush();
+	return true;
+}
+
+
+bool AppendToFile(CString& path, CString& data)
+{
+	std::ofstream ofile;
+	ofile.open(path, std::ios_base::app);
+	if (!ofile.is_open()) {
+		fprintf(stderr, "Can't open \"%s\" to write!", path.c_str());
+		return false;
+	}
+
+	ofile << data;
+	ofile.flush();
+	return true;
+}
+
+
 SString ShellExec	(CString& command)
 {
     std::array<char, 128> buffer;

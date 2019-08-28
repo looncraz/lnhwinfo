@@ -46,6 +46,16 @@ if ( $(CLEAN) = 1 )
 	DEBUG_SOURCE = "$(TOP)/debug" ;
 }
 
+Main test :
+[ GLOB $(DEBUG_SOURCE)					: *.cpp ]
+[ GLOB $(TOP)/hwlib						: *.cpp ]
+[ GLOB $(TOP)/gui						: *.cpp ]
+[ GLOB $(TOP)/tests						: *.cpp ]
+[ GLOB $(TOP)/common					: *.cpp ]
+;
+
+LINKLIBS on test = $(REQUIRED_LIBS) ;
+
 
 Main lnhwinfo :
 	[ GLOB $(DEBUG_SOURCE)					: *.cpp ]

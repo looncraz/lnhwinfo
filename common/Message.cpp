@@ -255,6 +255,20 @@ HWMessage::MakeEmpty()
 }
 
 
+bool
+HWMessage::IsEmpty		() const
+{
+	return Count() == 0;
+}
+
+
+int
+HWMessage::Count		() const
+{
+	return fData.size();
+}
+
+
 void
 HWMessage::Remove(CString& name)
 {
@@ -274,11 +288,11 @@ SString
 HWMessage::Flatten() const
 {
 	SString flat = "HWMessage{";
-	flat += What.size();
+	flat += std::to_string(What.size());
 	flat += ":" + What + "}{";
 
 	for (auto& [key, data] : fData) {
-		flat += key + "={" + data->ToString() + "}" + DATA_FLAT_SEP;
+		flat += key + "=" + data->ToString() + "" + DATA_FLAT_SEP;
 	}
 
 	flat += "}";
@@ -289,6 +303,11 @@ HWMessage::Flatten() const
 bool
 HWMessage::Unflatten(CString& input)
 {
+	/*
+		We need to work on making this faster, I suppose...
+		Probably use regex.. I mean.. yeah... something.
+	*/
+
 	MakeEmpty();
 	try {
 	if (input.find("HWMessage{") != 0)
@@ -331,7 +350,7 @@ HWMessage::Unflatten(CString& input)
 
 	// line == name={type:value}
 	for (auto& line : entries) {
-		printf("IN: \"%s\"\n", line.c_str());
+//		printf("IN: \"%s\"\n", line.c_str());
 		start = line.find("=");
 		if (start == SString::npos) {
 			fprintf(stderr, "Unflatten: can't parse \"%s\"\n", line.c_str());

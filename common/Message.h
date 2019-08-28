@@ -15,6 +15,8 @@ public:
 			bool				HasName		(CString&) const;
 
 			void				MakeEmpty	();
+			bool				IsEmpty		() const;
+			int					Count		() const;
 			void				Remove		(CString&);
 
 			SString				Flatten		() const;

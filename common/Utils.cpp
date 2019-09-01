@@ -195,6 +195,14 @@ SString ShellRootExec(CString& _command)
 }
 
 
+void ShellExecAsync(CString& command, std::function<void(CString&)> callback)
+{
+	std::thread([command, callback](){
+		callback(ShellExec(command));
+	}).detach();
+}
+
+
 std::vector<SString> SplitString(CString& s,
 	CString& separator, unsigned limit)
 {

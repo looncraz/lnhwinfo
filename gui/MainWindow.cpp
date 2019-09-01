@@ -68,7 +68,7 @@ bool
 HWMainWindow::on_button_click(GdkEventButton* ev)
 {
 	if (ev->type == GDK_2BUTTON_PRESS) {
-		HWUtils::ShellExec("mate-system-monitor &");
+		HWUtils::ShellExecAsync("mate-system-monitor");
 	}
 	return true;
 }

@@ -29,6 +29,8 @@ namespace HWUtils {
 
 	SString					ShellExec	(CString& command);
 	SString					ShellRootExec(CString& command);
+	void					ShellExecAsync(CString& command,
+								std::function<void(CString&)> = [](CString&){});
 
 	std::vector<SString>	SplitString	(CString& string, CString& delim,
 								unsigned limit = UINT_MAX);

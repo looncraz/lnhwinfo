@@ -21,6 +21,7 @@ HWApplication::HWApplication	()
 
 HWApplication::~HWApplication()
 {
+	gIsRunning = false;
 	g_hwapp = NULL;
 }
 
@@ -28,6 +29,7 @@ HWApplication::~HWApplication()
 void
 HWApplication::on_activate()
 {
+	new FSWatcher();	// first!
 	new HWCPUMonitor();
 	new HWPathMonitor();
 	new HWControllerMonitor();

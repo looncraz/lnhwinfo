@@ -23,6 +23,13 @@ namespace fs = std::experimental::filesystem;
 #endif
 
 
+/*
+	No while (true) loops!
+	while (gIsRunning) instead!
+*/
+extern bool gIsRunning;
+
+
 #define WINDOW_WIDTH	180.0
 #define MAX_UPDATE_RATE 100 // in milliseconds (10/sec)
 
@@ -104,5 +111,6 @@ bool ContainerHasItem(T& t, I i)
 	return 	ContainerFindItem(t, i) != t.end();
 }
 
+#include "FSWatcher.h"
 #include "Object.h"
 #include "Utils.h"

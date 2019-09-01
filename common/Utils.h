@@ -24,6 +24,9 @@ namespace HWUtils {
 	bool					ReadFileAsString(SString path,
 								SString* out);
 
+	SString					HashFile(CString& path);
+	SString					HashString(CString&);
+
 	bool					WriteToFile(CString& path, CString& out);
 	bool					AppendToFile(CString& path, CString& out);
 

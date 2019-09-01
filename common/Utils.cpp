@@ -5,6 +5,7 @@
 #include <fstream>
 #include <glob.h> // glob(), globfree()
 #include <memory>
+#include <openssl/md5.h>
 #include <stdexcept>
 #include <stdio.h>
 #include <stdexcept>
@@ -136,6 +137,28 @@ bool ReadFileAsString(SString path, SString* out)
 	}
 	ifile.close();
 	return true;
+}
+
+
+SString HashFile(CString& path)
+{
+	SString data;
+	if (!ReadFileAsString(path, &data))
+		return "";
+
+	return HashString(data);
+}
+
+
+SString	HashString(CString& data)
+{
+	auto tmp = MD5((const unsigned char*)data.c_str(), data.size(), NULL);
+
+	SString hash;
+	for (int i = 0; i < MD5_DIGEST_LENGTH; ++i)
+		hash += tmp[i];
+
+	return hash;
 }
 
 

@@ -6,6 +6,9 @@ then
 	exit 1;
 fi
 
+ncpus=`nproc --all`
+
+echo Building on $ncpus threads...
 
 dtest="$1 $2 $3"
 
@@ -13,9 +16,9 @@ if [[ "$dtest" =~ "debug" ]]
 then
 	echo "DEBUG!"
 	dtest=$(echo ${dtest/debug/})
-	DEBUG=1 /usr/bin/jam -j 16 -q $dtest
+	DEBUG=1 /usr/bin/jam -j $ncpus -q $dtest
 else
-	/usr/bin/jam -j 16 -q $dtest
+	/usr/bin/jam -j $ncpus -q $dtest
 fi
 
 #
